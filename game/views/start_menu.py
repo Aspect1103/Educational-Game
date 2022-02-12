@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+# Builtin
+from typing import TYPE_CHECKING
+
 # Pip
 import arcade
 import arcade.gui
@@ -7,7 +10,10 @@ from constants import BUTTON_STYLE
 
 # Custom
 from textures.textures import textures
-from views.game_selection import GameSelection
+from views.level_selection import LevelSelection
+
+if TYPE_CHECKING:
+    from window import Window
 
 
 class StartButton(arcade.gui.UIFlatButton):
@@ -19,17 +25,34 @@ class StartButton(arcade.gui.UIFlatButton):
             f" (Width={self.width}) (Height={self.height})>"
         )
 
-    def on_click(self, event: arcade.gui.UIOnClickEvent) -> None:
+    @staticmethod
+    def setup_level_selection(window: Window) -> None:
+        """
+        Sets up the level selection view for easy switching.
+
+        Parameters
+        ----------
+        window: Window
+            The window to set up the level selection view for.
+        """
+        level_selection_view = LevelSelection()
+        window.views["LevelSelection"] = level_selection_view
+
+    def on_click(self, _) -> None:
         """Called when the button is clicked."""
         # Get the current window and view
-        window = arcade.get_window()
+        window: Window = arcade.get_window()
         current_view: StartMenu = window.current_view  # noqa
 
         # Deactivate the UI manager so the buttons can't be clicked
         current_view.manager.disable()
 
-        # Show the game view
-        window.show_view(GameSelection())
+        # Show the level selection view
+        level_selection: LevelSelection = window.views["LevelSelection"] # noqa
+        window.show_view(level_selection)
+
+        # Enable the level selection UI manager
+        level_selection.manager.enable()
 
 
 class QuitButton(arcade.gui.UIFlatButton):
@@ -41,39 +64,46 @@ class QuitButton(arcade.gui.UIFlatButton):
             f" (Width={self.width}) (Height={self.height})>"
         )
 
-    def on_click(self, event: arcade.gui.UIOnClickEvent) -> None:
+    def on_click(self, _) -> None:
         """Called when the button is clicked."""
         arcade.exit()
 
 
 class StartMenu(arcade.View):
-    """Creates a start menu allowing the player to pick an option."""
+    """
+    Creates a start menu allowing the player to pick an option.
+
+    Attributes
+    ----------
+    manager: arcade.gui.UIManager
+        Manages all the different UI elements.
+    background: arcade.Texture
+        Stores the image background.
+    """
 
     def __init__(self) -> None:
         super().__init__()
         self.manager: arcade.gui.UIManager = arcade.gui.UIManager()
-        self.vertical_box: arcade.gui.UIBoxLayout = arcade.gui.UIBoxLayout()
+        vertical_box: arcade.gui.UIBoxLayout = arcade.gui.UIBoxLayout()
 
         # Create background
         self.background: arcade.Texture = textures["background"][0]
 
         # Create the start button
         start_button = StartButton(text="Start Game", width=205, style=BUTTON_STYLE)
-        self.vertical_box.add(start_button.with_space_around(bottom=20))
+        start_button.setup_level_selection(self.window)
+        vertical_box.add(start_button.with_space_around(bottom=20))
 
         # Create the quit button
-        quit_button = QuitButton(text="Quit Game", width=205, style=BUTTON_STYLE)
-        self.vertical_box.add(quit_button.with_space_around(bottom=20))
+        quit_button = QuitButton(text="Quit", width=205, style=BUTTON_STYLE)
+        vertical_box.add(quit_button.with_space_around(bottom=20))
 
         # Register the UI elements
         self.manager.add(
             arcade.gui.UIAnchorWidget(
-                anchor_x="center_x", anchor_y="center_y", child=self.vertical_box
+                anchor_x="center_x", anchor_y="center_y", child=vertical_box
             )
         )
-
-        # Enable the UI elements
-        self.manager.enable()
 
     def __repr__(self) -> str:
         return f"<StartMenu (Current window={self.window})>"
