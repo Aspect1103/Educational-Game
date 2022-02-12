@@ -25,19 +25,6 @@ class StartButton(arcade.gui.UIFlatButton):
             f" (Width={self.width}) (Height={self.height})>"
         )
 
-    @staticmethod
-    def setup_level_selection(window: Window) -> None:
-        """
-        Sets up the level selection view for easy switching.
-
-        Parameters
-        ----------
-        window: Window
-            The window to set up the level selection view for.
-        """
-        level_selection_view = LevelSelection()
-        window.views["LevelSelection"] = level_selection_view
-
     def on_click(self, _) -> None:
         """Called when the button is clicked."""
         # Get the current window and view
@@ -48,7 +35,7 @@ class StartButton(arcade.gui.UIFlatButton):
         current_view.manager.disable()
 
         # Show the level selection view
-        level_selection: LevelSelection = window.views["LevelSelection"] # noqa
+        level_selection: LevelSelection = window.views["LevelSelection"]  # noqa
         window.show_view(level_selection)
 
         # Enable the level selection UI manager
@@ -89,9 +76,12 @@ class StartMenu(arcade.View):
         # Create background
         self.background: arcade.Texture = textures["background"][0]
 
+        # Set up the level selection view
+        level_selection_view = LevelSelection()
+        self.window.views["LevelSelection"] = level_selection_view
+
         # Create the start button
         start_button = StartButton(text="Start Game", width=205, style=BUTTON_STYLE)
-        start_button.setup_level_selection(self.window)
         vertical_box.add(start_button.with_space_around(bottom=20))
 
         # Create the quit button

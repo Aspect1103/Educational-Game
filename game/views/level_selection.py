@@ -6,14 +6,15 @@ from typing import TYPE_CHECKING
 # Pip
 import arcade
 import arcade.gui
+from constants import BUTTON_STYLE
 
 # Custom
 from textures.textures import textures
-from constants import BUTTON_STYLE
+from views.game import Game
 
 if TYPE_CHECKING:
-    from window import Window
     from views.start_menu import StartMenu
+    from window import Window
 
 
 class LevelButton(arcade.gui.UIFlatButton):
@@ -31,7 +32,15 @@ class LevelButton(arcade.gui.UIFlatButton):
         window: Window = arcade.get_window()
         current_view: LevelSelection = window.current_view  # noqa
 
-        print("switch")
+        # Deactivate the UI manager so the buttons can't be clicked
+        current_view.manager.disable()
+
+        # Create the new game view
+        game_view = Game(self.text)
+        window.views["Game"] = game_view
+
+        # Show the game view
+        window.show_view(game_view)
 
 
 class BackButton(arcade.gui.UIFlatButton):
@@ -53,7 +62,7 @@ class BackButton(arcade.gui.UIFlatButton):
         current_view.manager.disable()
 
         # Show the start menu view
-        start_menu: StartMenu = window.views["StartMenu"] # noqa
+        start_menu: StartMenu = window.views["StartMenu"]  # noqa
         window.show_view(start_menu)
 
         # Enable the start menu UI manager
@@ -81,13 +90,17 @@ class LevelSelection(arcade.View):
         self.background: arcade.Texture = textures["background"][0]
 
         # Create the first row of levels
-        first_horizontal_box: arcade.gui.UIBoxLayout = arcade.gui.UIBoxLayout(vertical=False)
+        first_horizontal_box: arcade.gui.UIBoxLayout = arcade.gui.UIBoxLayout(
+            vertical=False
+        )
         for count in range(5):
-            new_level = LevelButton(text=str(count+1), width=50, style=BUTTON_STYLE)
+            new_level = LevelButton(text=str(count + 1), width=50, style=BUTTON_STYLE)
             first_horizontal_box.add(new_level.with_space_around(right=20))
 
         # Create the second row of levels
-        second_horizontal_box: arcade.gui.UIBoxLayout = arcade.gui.UIBoxLayout(vertical=False)
+        second_horizontal_box: arcade.gui.UIBoxLayout = arcade.gui.UIBoxLayout(
+            vertical=False
+        )
         for count in range(5, 10):
             new_level = LevelButton(text=str(count + 1), width=50, style=BUTTON_STYLE)
             second_horizontal_box.add(new_level.with_space_around(right=20))
