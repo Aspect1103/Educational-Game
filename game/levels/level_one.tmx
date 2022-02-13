@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="29" height="10" tilewidth="128" tileheight="128" infinite="0" nextlayerid="5" nextobjectid="1">
+ <tileset firstgid="1" source="EducationalGame.tsx"/>
+ <layer id="1" name="Platforms" width="29" height="10">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo4B4wIhG08s+StWhuxuXemziuMQY8agh1nxC7mYdAMwyABgAmogBFQ==
+  </data>
+ </layer>
+ <layer id="2" name="Walls" width="29" height="10">
+  <data encoding="base64" compression="zlib">
+   eJxjYCAM2IlQQ4o6apo1aueonSPdzuEAADX3AHE=
+  </data>
+ </layer>
+ <layer id="3" name="Coins" width="29" height="10">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFQxUw4WAPNCDWXYPJzaNgYAEAHHAACw==
+  </data>
+ </layer>
+ <layer id="4" name="Characters" width="29" height="10">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUEAvYsIgxE9BDSJ5ctcMJAAAWuAAQ
+  </data>
+ </layer>
+</map>

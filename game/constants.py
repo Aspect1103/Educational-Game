@@ -4,3 +4,6 @@ BUTTON_STYLE = {
     "font_color": (0, 0, 0),
     "bg_color": (196, 196, 196),
 }
+
+# Sprite sizes
+SPRITE_SCALE = 0.5
