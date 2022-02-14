@@ -36,7 +36,8 @@ class LevelButton(arcade.gui.UIFlatButton):
         current_view.manager.disable()
 
         # Create the new game view
-        game_view = Game(int(self.text))
+        game_view = Game()
+        game_view.setup(int(self.text))
         window.views["Game"] = game_view
 
         # Show the game view

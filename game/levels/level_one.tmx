@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="29" height="10" tilewidth="128" tileheight="128" infinite="0" nextlayerid="5" nextobjectid="1">
+<map version="1.8" tiledversion="1.8.1" orientation="orthogonal" renderorder="right-down" width="29" height="10" tilewidth="128" tileheight="128" infinite="0" nextlayerid="6" nextobjectid="1">
+ <editorsettings>
+  <export target="level_one.json" format="json"/>
+ </editorsettings>
  <tileset firstgid="1" source="EducationalGame.tsx"/>
  <layer id="1" name="Platforms" width="29" height="10">
   <data encoding="base64" compression="zlib">
@@ -16,9 +19,14 @@
    eJxjYBgFQxUw4WAPNCDWXYPJzaNgYAEAHHAACw==
   </data>
  </layer>
- <layer id="4" name="Characters" width="29" height="10">
+ <layer id="4" name="Enemies" width="29" height="10">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUEAvYsIgxE9BDSJ5ctcMJAAAWuAAQ
+   eJxjYBgFo2AUUAKYKZQnV+1wAgAOqAAK
+  </data>
+ </layer>
+ <layer id="5" name="Player" width="29" height="10">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUEAvYBtoBwxQAAAyYAAc=
   </data>
  </layer>
 </map>

@@ -1,76 +1,93 @@
-{ "compressionlevel":-1,
- "height":10,
- "infinite":false,
- "layers":[
-        {
-         "compression":"zlib",
-         "data":"eJxjYBgFo4B4wIhG08s+StWhuxuXemziuMQY8agh1nxC7mYdAMwyABgAmogBFQ==",
-         "encoding":"base64",
-         "height":10,
-         "id":1,
-         "name":"Platforms",
-         "opacity":1,
-         "type":"tilelayer",
-         "visible":true,
-         "width":29,
-         "x":0,
-         "y":0
-        },
-        {
-         "compression":"zlib",
-         "data":"eJxjYCAM2IlQQ4o6apo1aueonSPdzuEAADX3AHE=",
-         "encoding":"base64",
-         "height":10,
-         "id":2,
-         "name":"Walls",
-         "opacity":1,
-         "type":"tilelayer",
-         "visible":true,
-         "width":29,
-         "x":0,
-         "y":0
-        },
-        {
-         "compression":"zlib",
-         "data":"eJxjYBgFQxUw4WAPNCDWXYPJzaNgYAEAHHAACw==",
-         "encoding":"base64",
-         "height":10,
-         "id":3,
-         "name":"Coins",
-         "opacity":1,
-         "type":"tilelayer",
-         "visible":true,
-         "width":29,
-         "x":0,
-         "y":0
-        },
-        {
-         "compression":"zlib",
-         "data":"eJxjYBgFo2AUEAvYsIgxE9BDSJ5ctcMJAAAWuAAQ",
-         "encoding":"base64",
-         "height":10,
-         "id":4,
-         "name":"Characters",
-         "opacity":1,
-         "type":"tilelayer",
-         "visible":true,
-         "width":29,
-         "x":0,
-         "y":0
-        }],
- "nextlayerid":5,
- "nextobjectid":1,
- "orientation":"orthogonal",
- "renderorder":"right-down",
- "tiledversion":"1.7.2",
- "tileheight":128,
- "tilesets":[
-        {
-         "firstgid":1,
-         "source":"EducationalGame.tsx"
-        }],
- "tilewidth":128,
- "type":"map",
- "version":"1.6",
- "width":29
+{
+  "compressionlevel": -1,
+  "height": 10,
+  "infinite": false,
+  "layers": [
+    {
+      "compression": "zlib",
+      "data": "eJxjYBgFo4B4wIhG08s+StWhuxuXemziuMQY8agh1nxC7mYdAMwyABgAmogBFQ==",
+      "encoding": "base64",
+      "height": 10,
+      "id": 1,
+      "name": "Platforms",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 29,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "compression": "zlib",
+      "data": "eJxjYCAM2IlQQ4o6apo1aueonSPdzuEAADX3AHE=",
+      "encoding": "base64",
+      "height": 10,
+      "id": 2,
+      "name": "Walls",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 29,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "compression": "zlib",
+      "data": "eJxjYBgFQxUw4WAPNCDWXYPJzaNgYAEAHHAACw==",
+      "encoding": "base64",
+      "height": 10,
+      "id": 3,
+      "name": "Coins",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 29,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "compression": "zlib",
+      "data": "eJxjYBgFo2AUUAKYKZQnV+1wAgAOqAAK",
+      "encoding": "base64",
+      "height": 10,
+      "id": 4,
+      "name": "Enemies",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 29,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "compression": "zlib",
+      "data": "eJxjYBgFo2AUEAvYBtoBwxQAAAyYAAc=",
+      "encoding": "base64",
+      "height": 10,
+      "id": 5,
+      "name": "Player",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 29,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "nextlayerid": 6,
+  "nextobjectid": 1,
+  "orientation": "orthogonal",
+  "renderorder": "right-down",
+  "tiledversion": "1.8.1",
+  "tileheight": 128,
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "source": "EducationalGame.tsx"
+    }
+  ],
+  "tilewidth": 128,
+  "type": "map",
+  "version": "1.8",
+  "width": 29
 }
