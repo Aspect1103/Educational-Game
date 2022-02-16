@@ -5,9 +5,11 @@ from typing import Optional
 
 # Pip
 import arcade
+from constants import GRAVITY, PLAYER_JUMP_SPEED, PLAYER_MOVEMENT_SPEED
 
 # Custom
 from levels.levels import levels
+from physics import PhysicsEngine
 
 
 class Game(arcade.View):
@@ -18,6 +20,8 @@ class Game(arcade.View):
     ----------
     tile_map: Optional[arcade.TileMap]
         The tiled tilemap which represents the current level.
+    player: Optional[arcade.Sprite]
+        The sprite for the playable character in the game.
     wall_list: arcade.SpriteList
         The sprite list for the floor and crate sprites.
     coin_list: arcade.SpriteList
@@ -26,18 +30,34 @@ class Game(arcade.View):
         The sprite list for the enemies.
     blocker_list: arcade.SpriteList
         The sprite list for the walls blocking progression.
-    player_list: arcade.SpriteList
-        The sprite list for the player.
+    bullet_list: arcade.SpriteList
+        The sprite list for the bullets.
+    physics_engine: Optional[PhysicsEngine]
+        The physics engine which processes collision and gravity.
+    camera: Optional[arcade.Camera]
+        The camera used for moving the viewport around the screen.
+    left_pressed: bool
+        Whether the left key is pressed or not.
+    right_pressed: bool
+        Whether the right key is pressed or not.
     """
 
     def __init__(self) -> None:
         super().__init__()
         self.tile_map: Optional[arcade.TileMap] = None
+        self.player: Optional[arcade.Sprite] = None
         self.wall_list: arcade.SpriteList = arcade.SpriteList(use_spatial_hash=True)
         self.coin_list: arcade.SpriteList = arcade.SpriteList(use_spatial_hash=True)
         self.enemy_list: arcade.SpriteList = arcade.SpriteList(use_spatial_hash=True)
         self.blocker_list: arcade.SpriteList = arcade.SpriteList(use_spatial_hash=True)
-        self.player_list: arcade.SpriteList = arcade.SpriteList(use_spatial_hash=True)
+        self.bullet_list: arcade.SpriteList = arcade.SpriteList(use_spatial_hash=True)
+        self.physics_engine: Optional[PhysicsEngine] = None
+        self.camera: Optional[arcade.Camera] = None
+        self.left_pressed: bool = False
+        self.right_pressed: bool = False
+
+    def __repr__(self) -> str:
+        return f"<Game (Current window={self.window})>"
 
     def setup(self, level: int) -> None:
         """
@@ -60,19 +80,121 @@ class Game(arcade.View):
         self.coin_list = self.tile_map.sprite_lists["Coins"]
         self.enemy_list = self.tile_map.sprite_lists["Enemies"]
         self.blocker_list = self.tile_map.sprite_lists["Walls"]
-        self.player_list = self.tile_map.sprite_lists["Player"]
+        self.player = self.tile_map.sprite_lists["Player"][0]
+
+        # Make sure the player object is assigned to
+        assert self.player is not None
+
+        # Set up the physics engine
+        self.physics_engine = PhysicsEngine(self.player, GRAVITY, self.wall_list)
+
+        # Set up the Camera
+        self.camera = arcade.Camera(self.window.width, self.window.height)
 
         # Set the background color
         arcade.set_background_color(arcade.color.BABY_BLUE)
 
     def on_draw(self) -> None:
         """Render the screen."""
+        # Make sure variables needed are valid
+        assert self.player is not None
+        assert self.camera is not None
+
         # Clear the screen
         self.clear()
 
-        # Draw the sprite lists and player
+        # Activate our Camera
+        self.camera.use()
+
+        # Draw the sprite lists and the player
         self.wall_list.draw()
         self.coin_list.draw()
         self.enemy_list.draw()
         self.blocker_list.draw()
-        self.player_list.draw()
+        self.player.draw()
+
+    def on_update(self, delta_time: float) -> None:
+        """
+        Processes movement and game logic.
+
+        Parameters
+        ----------
+        delta_time: float
+            Time interval since the last time the function was called.
+        """
+        # Make sure variables needed are valid
+        assert self.physics_engine is not None
+        assert self.player is not None
+
+        # Calculate the speed and direction of the player based on the keys pressed
+        self.player.change_x = 0
+
+        if self.left_pressed and not self.right_pressed:
+            self.player.change_x = -PLAYER_MOVEMENT_SPEED
+        elif self.right_pressed and not self.left_pressed:
+            self.player.change_x = PLAYER_MOVEMENT_SPEED
+
+        # Update the physics engine
+        self.physics_engine.update()
+
+        # Position the camera
+        self.center_camera_on_player()
+
+    def on_key_press(self, key: int, modifiers: int) -> None:
+        """
+        Called when the player presses a key.
+
+        Parameters
+        ----------
+        key: int
+            The key that was hit.
+        modifiers: int
+            Bitwise AND of all modifiers (shift, ctrl, num lock) pressed during this
+            event.
+        """
+        # Make sure variables needed are valid
+        assert self.player is not None
+        assert self.physics_engine is not None
+
+        if key is arcade.key.A:
+            self.left_pressed = True
+        elif key is arcade.key.D:
+            self.right_pressed = True
+        elif key is arcade.key.SPACE and self.physics_engine.can_jump():
+            self.player.change_y = PLAYER_JUMP_SPEED
+
+    def on_key_release(self, key: int, modifiers: int) -> None:
+        """
+        Called when the player releases a key.
+
+        Parameters
+        ----------
+        key: int
+            The key that was hit.
+        modifiers: int
+            Bitwise AND of all modifiers (shift, ctrl, num lock) pressed during this
+            event.
+        """
+        if key is arcade.key.A:
+            self.left_pressed = False
+        elif key is arcade.key.D:
+            self.right_pressed = False
+
+    def center_camera_on_player(self) -> None:
+        """Centers the camera on the player."""
+        # Make sure variables needed are valid
+        assert self.camera is not None
+        assert self.player is not None
+
+        # Calculate the screen position centered on the player
+        screen_center_x = self.player.center_x - (self.camera.viewport_width / 2)
+        screen_center_y = self.player.center_y - (self.camera.viewport_height / 2)
+
+        # Don't let the camera travel past 0
+        if screen_center_x < 0:
+            screen_center_x = 0
+        if screen_center_y < 0:
+            screen_center_y = 0
+
+        # Move the camera to the new position
+        self.camera.move_to((screen_center_x, screen_center_y))  # noqa
