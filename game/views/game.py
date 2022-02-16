@@ -5,7 +5,7 @@ from typing import Optional
 
 # Pip
 import arcade
-from constants import GRAVITY, PLAYER_JUMP_SPEED, PLAYER_MOVEMENT_SPEED
+from constants import DAMPING, GRAVITY, PLAYER_JUMP_IMPULSE, PLAYER_MOVE_FORCE
 
 # Custom
 from levels.levels import levels
@@ -86,7 +86,14 @@ class Game(arcade.View):
         assert self.player is not None
 
         # Set up the physics engine
-        self.physics_engine = PhysicsEngine(self.player, GRAVITY, self.wall_list)
+        self.physics_engine = PhysicsEngine(GRAVITY, DAMPING)
+        self.physics_engine.setup(
+            self.player,
+            self.wall_list,
+            self.enemy_list,
+            self.coin_list,
+            self.blocker_list,
+        )
 
         # Set up the Camera
         self.camera = arcade.Camera(self.window.width, self.window.height)
@@ -127,15 +134,15 @@ class Game(arcade.View):
         assert self.player is not None
 
         # Calculate the speed and direction of the player based on the keys pressed
-        self.player.change_x = 0
-
         if self.left_pressed and not self.right_pressed:
-            self.player.change_x = -PLAYER_MOVEMENT_SPEED
+            self.physics_engine.apply_force(self.player, (-PLAYER_MOVE_FORCE, 0))
+            self.physics_engine.set_friction(self.player, 0)
         elif self.right_pressed and not self.left_pressed:
-            self.player.change_x = PLAYER_MOVEMENT_SPEED
+            self.physics_engine.apply_force(self.player, (PLAYER_MOVE_FORCE, 0))
+            self.physics_engine.set_friction(self.player, 0)
 
         # Update the physics engine
-        self.physics_engine.update()
+        self.physics_engine.step()
 
         # Position the camera
         self.center_camera_on_player()
@@ -160,8 +167,8 @@ class Game(arcade.View):
             self.left_pressed = True
         elif key is arcade.key.D:
             self.right_pressed = True
-        elif key is arcade.key.SPACE and self.physics_engine.can_jump():
-            self.player.change_y = PLAYER_JUMP_SPEED
+        elif key is arcade.key.SPACE and self.physics_engine.is_on_ground(self.player):
+            self.physics_engine.apply_impulse(self.player, (0, PLAYER_JUMP_IMPULSE))
 
     def on_key_release(self, key: int, modifiers: int) -> None:
         """

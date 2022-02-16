@@ -1,28 +1,117 @@
 from __future__ import annotations
 
+# Custom
+from typing import Tuple
+
 # Pip
 import arcade
 
+# Custom
+from constants import (
+    FRICTION,
+    PLAYER_MASS,
+    PLAYER_MAX_HORIZONTAL_SPEED,
+    PLAYER_MAX_VERTICAL_SPEED,
+)
 
-class PhysicsEngine(arcade.PhysicsEnginePlatformer):
+
+def coin_hit_handler(player: arcade.Sprite, coin: arcade.Sprite, *args) -> None:
     """
-    An abstracted version of the Platformer Physics Engine which eases setting up a
-    physics engine for a platformer. I'll probably change this to Pymunk later on.
+    Handles collision between a player sprite and a coin sprite.
 
     Parameters
     ----------
     player: arcade.Sprite
         The player sprite.
-    gravity: float
-        The downward acceleration per frame.
-    walls: arcade.SpriteList
-        The sprite list for the wall sprites.
+    coin: arcade.Sprite
+        The coin sprite that was hit.
+    """
+    print(args)
+
+
+class PhysicsEngine(arcade.PymunkPhysicsEngine):
+    """
+    An abstracted version of the Pymunk Physics Engine which eases setting up a physics
+    engine for a platformer.
+
+    Parameters
+    ----------
+    gravity: Tuple[float, float]
+        The direction where gravity is pointing.
+    damping: float
+        The amount of speed which is kept to the next tick. A value of 1.0 means no
+        speed is lost, while 0.9 means 10% of speed is lost.
     """
 
-    def __init__(
-        self, player: arcade.Sprite, gravity: float, walls: arcade.SpriteList
+    def __init__(self, gravity: Tuple[float, float], damping: float) -> None:
+        super().__init__(gravity=gravity, damping=damping)
+        self.gravity: Tuple[float, float] = gravity
+        self.damping: float = damping
+
+    def setup(
+        self,
+        player: arcade.Sprite,
+        wall_list: arcade.SpriteList,
+        enemy_list: arcade.SpriteList,
+        coin_list: arcade.SpriteList,
+        blocker_list: arcade.SpriteList,
     ) -> None:
-        super().__init__(player_sprite=player, gravity_constant=gravity, walls=walls)
+        """
+        Setups up the various sprites needed for the physics engine to work properly.
+
+        Parameters
+        ----------
+        player: arcade.Sprite
+            The player sprite.
+        wall_list: arcade.SpriteList
+            The sprite list for the wall sprites.
+        enemy_list: arcade.SpriteList
+            The sprite list for the enemy sprites
+        coin_list: arcade.SpriteList
+            The sprite list for the coin sprites.
+        blocker_list: arcade.SpriteList
+            The sprite list for the blocker sprites.
+        """
+        # Add the player sprite to the physics engine
+        self.add_sprite(
+            player,
+            mass=PLAYER_MASS,
+            friction=FRICTION,
+            moment_of_inertia=self.MOMENT_INF,
+            max_horizontal_velocity=PLAYER_MAX_HORIZONTAL_SPEED,
+            max_vertical_velocity=PLAYER_MAX_VERTICAL_SPEED,
+            collision_type="player",
+        )
+
+        # Add the wall sprites to the physics engine
+        self.add_sprite_list(
+            wall_list, friction=FRICTION, body_type=self.STATIC, collision_type="wall"
+        )
+
+        # Add the enemy sprites to the physics engine
+        self.add_sprite_list(
+            enemy_list,
+            friction=FRICTION,
+            moment_of_intertia=self.MOMENT_INF,
+            collision_type="enemy",
+        )
+
+        # Add the coin sprites to the physics engine
+        self.add_sprite_list(coin_list, friction=FRICTION, collision_type="coin")
+
+        # Add the blocker sprites to the physics engine
+        self.add_sprite_list(
+            blocker_list,
+            friction=FRICTION,
+            body_type=self.STATIC,
+            collision_type="blocker",
+        )
+
+        # Add collision handlers
+        self.add_collision_handler("player", "coin", post_handler=coin_hit_handler)
 
     def __repr__(self) -> str:
-        return "<PhysicsEngine>"
+        return (
+            f"<PhysicsEngine (Gravity={self.gravity}) (Damping={self.damping}) (Sprite"
+            f" count={len(self.sprites)})>"
+        )
