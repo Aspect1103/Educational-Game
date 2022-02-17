@@ -1,15 +1,19 @@
 from __future__ import annotations
 
 # Builtin
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 # Pip
 import arcade
-from constants import DAMPING, GRAVITY, PLAYER_JUMP_IMPULSE, PLAYER_MOVE_FORCE
 
 # Custom
+from constants import DAMPING, GRAVITY, PLAYER_JUMP_IMPULSE, PLAYER_MOVE_FORCE
+from entities.player import Player
 from levels.levels import levels
 from physics import PhysicsEngine
+
+if TYPE_CHECKING:
+    from levels.levels import GameLevel
 
 
 class Game(arcade.View):
@@ -18,9 +22,9 @@ class Game(arcade.View):
 
     Attributes
     ----------
-    tile_map: Optional[arcade.TileMap]
-        The tiled tilemap which represents the current level.
-    player: Optional[arcade.Sprite]
+    level_data: Optional[GameLevel]
+        The LevelInstance namedtuple which holds the data for this level.
+    player: Optional[Player]
         The sprite for the playable character in the game.
     wall_list: arcade.SpriteList
         The sprite list for the floor and crate sprites.
@@ -36,6 +40,10 @@ class Game(arcade.View):
         The physics engine which processes collision and gravity.
     camera: Optional[arcade.Camera]
         The camera used for moving the viewport around the screen.
+    gui_camera: Optional[arcade.Camera]
+        The camera used for visualising the GUI elements.
+    score_text: arcade.Text
+        The text object used for displaying the score.
     left_pressed: bool
         Whether the left key is pressed or not.
     right_pressed: bool
@@ -44,8 +52,8 @@ class Game(arcade.View):
 
     def __init__(self) -> None:
         super().__init__()
-        self.tile_map: Optional[arcade.TileMap] = None
-        self.player: Optional[arcade.Sprite] = None
+        self.level_data: Optional[GameLevel] = None
+        self.player: Optional[Player] = None
         self.wall_list: arcade.SpriteList = arcade.SpriteList(use_spatial_hash=True)
         self.coin_list: arcade.SpriteList = arcade.SpriteList(use_spatial_hash=True)
         self.enemy_list: arcade.SpriteList = arcade.SpriteList(use_spatial_hash=True)
@@ -53,6 +61,14 @@ class Game(arcade.View):
         self.bullet_list: arcade.SpriteList = arcade.SpriteList(use_spatial_hash=True)
         self.physics_engine: Optional[PhysicsEngine] = None
         self.camera: Optional[arcade.Camera] = None
+        self.gui_camera: Optional[arcade.Camera] = None
+        self.score_text: arcade.Text = arcade.Text(
+            "Score: 0",
+            10,
+            10,
+            arcade.color.BLACK,
+            20,
+        )
         self.left_pressed: bool = False
         self.right_pressed: bool = False
 
@@ -70,20 +86,24 @@ class Game(arcade.View):
         """
         # Load the tilemap
         try:
-            self.tile_map = levels[str(level)]
+            self.level_data = levels[str(level)]
         except KeyError:
             arcade.exit()
             raise KeyError(f"No map available for level {level}")
 
         # Load each tilemap layer into its own sprite list
-        self.wall_list = self.tile_map.sprite_lists["Platforms"]
-        self.coin_list = self.tile_map.sprite_lists["Coins"]
-        self.enemy_list = self.tile_map.sprite_lists["Enemies"]
-        self.blocker_list = self.tile_map.sprite_lists["Walls"]
-        self.player = self.tile_map.sprite_lists["Player"][0]
+        tile_map = self.level_data.tilemap
+        self.wall_list = tile_map.sprite_lists["Platforms"]
+        self.coin_list = tile_map.sprite_lists["Coins"]
+        self.enemy_list = tile_map.sprite_lists["Enemies"]
+        self.blocker_list = tile_map.sprite_lists["Walls"]
 
-        # Make sure the player object is assigned to
-        assert self.player is not None
+        # Create the player object
+        x, y = (
+            tile_map.sprite_lists["Player"][0].center_x,
+            tile_map.sprite_lists["Player"][0].center_y,
+        )
+        self.player = Player(x, y)
 
         # Set up the physics engine
         self.physics_engine = PhysicsEngine(GRAVITY, DAMPING)
@@ -97,6 +117,7 @@ class Game(arcade.View):
 
         # Set up the Camera
         self.camera = arcade.Camera(self.window.width, self.window.height)
+        self.gui_camera = arcade.Camera(self.window.width, self.window.height)
 
         # Set the background color
         arcade.set_background_color(arcade.color.BABY_BLUE)
@@ -106,11 +127,13 @@ class Game(arcade.View):
         # Make sure variables needed are valid
         assert self.player is not None
         assert self.camera is not None
+        assert self.gui_camera is not None
+        assert self.score_text is not None
 
         # Clear the screen
         self.clear()
 
-        # Activate our Camera
+        # Activate our sprite camera
         self.camera.use()
 
         # Draw the sprite lists and the player
@@ -119,6 +142,11 @@ class Game(arcade.View):
         self.enemy_list.draw()
         self.blocker_list.draw()
         self.player.draw()
+
+        # Draw the score on the screen
+        self.gui_camera.use()
+        self.score_text.value = f"Score: {self.player.score}"
+        self.score_text.draw()
 
     def on_update(self, delta_time: float) -> None:
         """
@@ -136,10 +164,15 @@ class Game(arcade.View):
         # Calculate the speed and direction of the player based on the keys pressed
         if self.left_pressed and not self.right_pressed:
             self.physics_engine.apply_force(self.player, (-PLAYER_MOVE_FORCE, 0))
+            # Set the friction to 0 so the player doesn't stop suddenly
             self.physics_engine.set_friction(self.player, 0)
         elif self.right_pressed and not self.left_pressed:
             self.physics_engine.apply_force(self.player, (PLAYER_MOVE_FORCE, 0))
+            # Set the friction to 0 so the player doesn't stop suddenly
             self.physics_engine.set_friction(self.player, 0)
+        else:
+            # The player is not moving so increase the friction making the player stop
+            self.physics_engine.set_friction(self.player, 1)
 
         # Update the physics engine
         self.physics_engine.step()
@@ -194,8 +227,8 @@ class Game(arcade.View):
         assert self.player is not None
 
         # Calculate the screen position centered on the player
-        screen_center_x = self.player.center_x - (self.camera.viewport_width / 2)
-        screen_center_y = self.player.center_y - (self.camera.viewport_height / 2)
+        screen_center_x = self.player.center_x - (self.window.width / 2)
+        screen_center_y = self.player.center_y - (self.window.height / 2)
 
         # Don't let the camera travel past 0
         if screen_center_x < 0:

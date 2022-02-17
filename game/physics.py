@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 # Custom
-from typing import Tuple
+from typing import TYPE_CHECKING, Tuple
 
 # Pip
 import arcade
@@ -13,20 +13,30 @@ from constants import (
     PLAYER_MAX_HORIZONTAL_SPEED,
     PLAYER_MAX_VERTICAL_SPEED,
 )
+from entities.player import ScoreAmount
+
+if TYPE_CHECKING:
+    from entities.player import Player
 
 
-def coin_hit_handler(player: arcade.Sprite, coin: arcade.Sprite, *args) -> None:
+def coin_hit_handler(player: Player, coin: arcade.Sprite, *_) -> bool:
     """
-    Handles collision between a player sprite and a coin sprite.
+    Handles collision between a player sprite and a coin sprite. This uses the
+    begin_handler which processes collision when two shapes are touching for the first
+    time.
 
     Parameters
     ----------
-    player: arcade.Sprite
+    player: Player
         The player sprite.
     coin: arcade.Sprite
         The coin sprite that was hit.
     """
-    print(args)
+    coin.remove_from_sprite_lists()
+    player.update_score(ScoreAmount.COIN)  # noqa
+    # Return False so pymunk will ignore processing the collision since we just want to
+    # increase the score and remove the coin
+    return False
 
 
 class PhysicsEngine(arcade.PymunkPhysicsEngine):
@@ -108,7 +118,7 @@ class PhysicsEngine(arcade.PymunkPhysicsEngine):
         )
 
         # Add collision handlers
-        self.add_collision_handler("player", "coin", post_handler=coin_hit_handler)
+        self.add_collision_handler("player", "coin", begin_handler=coin_hit_handler)
 
     def __repr__(self) -> str:
         return (

@@ -1,9 +1,8 @@
 from __future__ import annotations
 
-import pathlib
-
 # Builtin
-from typing import Dict
+import pathlib
+from typing import Dict, NamedTuple, Union
 
 # Pip
 import arcade
@@ -11,26 +10,63 @@ import arcade
 # Custom
 from constants import SPRITE_SCALE
 
+
+def load_tilemap(
+    path: pathlib.Path, options: Dict[str, Dict[str, Union[str, bool]]]
+) -> arcade.TileMap:
+    """
+    Initialises a tilemap.
+
+    Parameters
+    ----------
+    path: pathlib.Path
+        The tilemap path.
+    options: Dict[str, Dict[str, Union[str, bool]]]
+        Specific options to use when loading the tilemap.
+    """
+    return arcade.load_tilemap(str(path), SPRITE_SCALE, options)
+
+
+class GameLevel(NamedTuple):
+    """
+    Represents a level in the game.
+
+    tilemap: arcade.TileMap
+        The loaded tilemap for the level.
+    blocker_count: int
+        The amount of blocker walls the level contains.
+    """
+
+    tilemap: arcade.TileMap
+    blocker_count: int
+
+
 # Create the level path
 level_path = pathlib.Path(__file__).resolve().parent
 
-# Create a dictionary to hold all the filenames for the levels
-filenames = {
-    "1": "level_one.json",
-}
-
 # Create a dictionary to hold all the options for each layer
-layer_options = {
+layer_options: Dict[str, Dict[str, Union[str, bool]]] = {
     "Platforms": {
         "use_spatial_hash": True,
+        "hit_box_algorithm": "Detailed",
     },
-    "Walls": {"use_spatial_hash": True},
+    "Walls": {
+        "use_spatial_hash": True,
+        "hit_box_algorithm": "Detailed",
+    },
+    "Enemies": {
+        "use_spatial_hash": True,
+        "hit_box_algorithm": "Detailed",
+    },
+    "Coins": {
+        "use_spatial_hash": True,
+        "hit_box_algorithm": "Detailed",
+    },
 }
 
 # Create the levels
-levels: Dict[str, arcade.TileMap] = {
-    key: arcade.load_tilemap(
-        str(level_path.joinpath(value)), SPRITE_SCALE, layer_options
+levels: Dict[str, GameLevel] = {
+    "1": GameLevel(
+        load_tilemap(level_path.joinpath("level_one.json"), layer_options), 3
     )
-    for key, value in filenames.items()
 }
