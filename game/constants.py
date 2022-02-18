@@ -14,6 +14,11 @@ PLAYER_MAX_VERTICAL_SPEED = 2000
 PLAYER_MOVE_FORCE = 1000
 PLAYER_JUMP_FORCE = 70000
 
+# Entity constants
+ATTACK_COOLDOWN = 1
+FACING_RIGHT = 1
+FACING_LEFT = -1
+
 # Physics constants
 GRAVITY = (0, -2000)
 DAMPING = 0.01  # This has to be set to 0.01 as 0 would make the player not move at all

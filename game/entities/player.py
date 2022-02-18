@@ -7,8 +7,7 @@ from enum import Enum
 import arcade
 
 # Custom
-from constants import SPRITE_SCALE
-from textures.textures import textures
+from entities.entity import Entity
 
 
 class ScoreAmount(Enum):
@@ -19,30 +18,27 @@ class ScoreAmount(Enum):
     QUESTION: int = 10
 
 
-class Player(arcade.Sprite):
+class Player(Entity):
     """
     Represents a playable character in the game.
 
     Parameters
     ----------
-    x: int
+    x: float
         The x position of the player.
-    y: int
+    y: float
         The y position of the player.
+    texture: arcade.Texture
+        The sprite which represents this player.
 
     Attributes
     ----------
-    texture: arcade.Texture
-        The sprite which represents this player.
     score: int
         The score for the player.
     """
 
-    def __init__(self, x: int, y: int) -> None:
-        super().__init__(scale=SPRITE_SCALE)
-        self.center_x: float = x
-        self.center_y: float = y
-        self.texture: arcade.Texture = textures["player"][0]
+    def __init__(self, x: float, y: float, texture: arcade.Texture) -> None:
+        super().__init__(x, y, texture)
         self.score: int = 0
 
     def __repr__(self) -> str:

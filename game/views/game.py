@@ -7,10 +7,18 @@ from typing import TYPE_CHECKING, Optional
 import arcade
 
 # Custom
-from constants import DAMPING, GRAVITY, PLAYER_JUMP_FORCE, PLAYER_MOVE_FORCE
+from constants import (
+    ATTACK_COOLDOWN,
+    DAMPING,
+    GRAVITY,
+    PLAYER_JUMP_FORCE,
+    PLAYER_MOVE_FORCE,
+)
+from entities.enemy import Enemy
 from entities.player import Player
 from levels.levels import levels
 from physics import PhysicsEngine
+from textures.textures import textures
 
 if TYPE_CHECKING:
     from levels.levels import GameLevel
@@ -95,15 +103,19 @@ class Game(arcade.View):
         tile_map = self.level_data.tilemap
         self.wall_list = tile_map.sprite_lists["Platforms"]
         self.coin_list = tile_map.sprite_lists["Coins"]
-        self.enemy_list = tile_map.sprite_lists["Enemies"]
         self.blocker_list = tile_map.sprite_lists["Walls"]
 
         # Create the player object
-        x, y = (
-            tile_map.sprite_lists["Player"][0].center_x,
-            tile_map.sprite_lists["Player"][0].center_y,
+        player_obj = tile_map.sprite_lists["Player"][0]
+        self.player = Player(
+            player_obj.center_x, player_obj.center_y, textures["player"][0]
         )
-        self.player = Player(x, y)
+
+        # Create the enemies
+        for enemy in tile_map.sprite_lists["Enemies"]:
+            self.enemy_list.append(
+                Enemy(enemy.center_x, enemy.center_y, textures["enemy"][0])
+            )
 
         # Set up the physics engine
         self.physics_engine = PhysicsEngine(GRAVITY, DAMPING)
@@ -141,6 +153,7 @@ class Game(arcade.View):
         self.coin_list.draw()
         self.enemy_list.draw()
         self.blocker_list.draw()
+        self.bullet_list.draw()
         self.player.draw()
 
         # Draw the score on the screen
@@ -160,6 +173,9 @@ class Game(arcade.View):
         # Make sure variables needed are valid
         assert self.physics_engine is not None
         assert self.player is not None
+
+        # Update the player's time since last attack
+        self.player.time_since_last_attack += delta_time
 
         # Calculate the speed and direction of the player based on the keys pressed
         if self.left_pressed and not self.right_pressed:
@@ -219,6 +235,32 @@ class Game(arcade.View):
             self.left_pressed = False
         elif key is arcade.key.D:
             self.right_pressed = False
+
+    def on_mouse_press(self, x: float, y: float, button: int, modifiers: int) -> None:
+        """
+        Called when the player presses the mouse button.
+
+        Parameters
+        ----------
+        x: float
+            The x position of the mouse.
+        y: float
+            The y position of the mouse.
+        button: int
+            Which button was hit.
+        modifiers: int
+            Bitwise AND of all modifiers (shift, ctrl, num lock) pressed during this
+            event.
+        """
+        # Make sure variables needed are valid
+        assert self.player is not None
+
+        if (
+            button is arcade.MOUSE_BUTTON_LEFT
+            and self.player.time_since_last_attack >= ATTACK_COOLDOWN
+        ):
+            self.player.ranged_attack(self.bullet_list)
+        print(self.bullet_list.sprite_list)
 
     def center_camera_on_player(self) -> None:
         """Centers the camera on the player."""

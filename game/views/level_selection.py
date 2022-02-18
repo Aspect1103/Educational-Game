@@ -91,17 +91,14 @@ class LevelSelection(arcade.View):
         self.background: arcade.Texture = textures["background"][0]
 
         # Create the first row of levels
-        first_horizontal_box: arcade.gui.UIBoxLayout = arcade.gui.UIBoxLayout(
-            vertical=False
-        )
+        first_horizontal_box = arcade.gui.UIBoxLayout(vertical=False)
+
         for count in range(5):
             new_level = LevelButton(text=str(count + 1), width=50, style=BUTTON_STYLE)
             first_horizontal_box.add(new_level.with_space_around(right=20))
 
         # Create the second row of levels
-        second_horizontal_box: arcade.gui.UIBoxLayout = arcade.gui.UIBoxLayout(
-            vertical=False
-        )
+        second_horizontal_box = arcade.gui.UIBoxLayout(vertical=False)
         for count in range(5, 10):
             new_level = LevelButton(text=str(count + 1), width=50, style=BUTTON_STYLE)
             second_horizontal_box.add(new_level.with_space_around(right=20))
