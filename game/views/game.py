@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Optional
 import arcade
 
 # Custom
-from constants import DAMPING, GRAVITY, PLAYER_JUMP_IMPULSE, PLAYER_MOVE_FORCE
+from constants import DAMPING, GRAVITY, PLAYER_JUMP_FORCE, PLAYER_MOVE_FORCE
 from entities.player import Player
 from levels.levels import levels
 from physics import PhysicsEngine
@@ -201,7 +201,7 @@ class Game(arcade.View):
         elif key is arcade.key.D:
             self.right_pressed = True
         elif key is arcade.key.SPACE and self.physics_engine.is_on_ground(self.player):
-            self.physics_engine.apply_impulse(self.player, (0, PLAYER_JUMP_IMPULSE))
+            self.physics_engine.apply_force(self.player, (0, PLAYER_JUMP_FORCE))
 
     def on_key_release(self, key: int, modifiers: int) -> None:
         """

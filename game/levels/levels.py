@@ -48,19 +48,15 @@ level_path = pathlib.Path(__file__).resolve().parent
 layer_options: Dict[str, Dict[str, Union[str, bool]]] = {
     "Platforms": {
         "use_spatial_hash": True,
-        "hit_box_algorithm": "Detailed",
     },
     "Walls": {
         "use_spatial_hash": True,
-        "hit_box_algorithm": "Detailed",
     },
     "Enemies": {
         "use_spatial_hash": True,
-        "hit_box_algorithm": "Detailed",
     },
     "Coins": {
         "use_spatial_hash": True,
-        "hit_box_algorithm": "Detailed",
     },
 }
 

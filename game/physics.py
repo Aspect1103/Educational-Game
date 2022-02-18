@@ -107,7 +107,9 @@ class PhysicsEngine(arcade.PymunkPhysicsEngine):
         )
 
         # Add the coin sprites to the physics engine
-        self.add_sprite_list(coin_list, friction=FRICTION, collision_type="coin")
+        self.add_sprite_list(
+            coin_list, friction=FRICTION, body_type=self.STATIC, collision_type="coin"
+        )
 
         # Add the blocker sprites to the physics engine
         self.add_sprite_list(

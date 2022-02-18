@@ -22,8 +22,5 @@ filenames = {
 textures: Dict[str, List[arcade.Texture]] = {}
 for key, value in filenames.items():
     textures[key] = [
-        arcade.load_texture(
-            str(texture_path.joinpath(filename)), hit_box_algorithm="Detailed"
-        )
-        for filename in value
+        arcade.load_texture(str(texture_path.joinpath(filename))) for filename in value
     ]
