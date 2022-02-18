@@ -61,11 +61,25 @@
     },
     {
       "compression": "zlib",
-      "data": "eJxjYCAesNNILalg1B3kmz3qDvLVkgpG3UG+2aPuIF8tqWDUHSMPAAA/aQC3",
+      "data": "eJxjYKANYKeRuaSCUXegglF3oIJRd6CCUXegglF3oIJRdwwPAACb1wBc",
+      "encoding": "base64",
+      "height": 15,
+      "id": 6,
+      "name": "Walls2",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 34,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "compression": "zlib",
+      "data": "eJxjYCAesJOglpZg1B2oYNQdqGDUHahg1B2oYNQdqGDUHSMPAACrewBc",
       "encoding": "base64",
       "height": 15,
       "id": 2,
-      "name": "Walls",
+      "name": "Walls1",
       "opacity": 1,
       "type": "tilelayer",
       "visible": true,
@@ -74,7 +88,7 @@
       "y": 0
     }
   ],
-  "nextlayerid": 6,
+  "nextlayerid": 7,
   "nextobjectid": 1,
   "orientation": "orthogonal",
   "renderorder": "right-down",

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 # Custom
-from typing import TYPE_CHECKING, Tuple
+from typing import TYPE_CHECKING, List, Tuple
 
 # Pip
 import arcade
@@ -64,7 +64,7 @@ class PhysicsEngine(arcade.PymunkPhysicsEngine):
         wall_list: arcade.SpriteList,
         enemy_list: arcade.SpriteList,
         coin_list: arcade.SpriteList,
-        blocker_list: arcade.SpriteList,
+        blocker_list: List[arcade.SpriteList],
     ) -> None:
         """
         Setups up the various sprites needed for the physics engine to work properly.
@@ -79,8 +79,8 @@ class PhysicsEngine(arcade.PymunkPhysicsEngine):
             The sprite list for the enemy sprites
         coin_list: arcade.SpriteList
             The sprite list for the coin sprites.
-        blocker_list: arcade.SpriteList
-            The sprite list for the blocker sprites.
+        blocker_list: List[arcade.SpriteList]
+            A list containing sprite lists for each blocker wall.
         """
         # Add the player sprite to the physics engine
         self.add_sprite(
@@ -112,12 +112,13 @@ class PhysicsEngine(arcade.PymunkPhysicsEngine):
         )
 
         # Add the blocker sprites to the physics engine
-        self.add_sprite_list(
-            blocker_list,
-            friction=FRICTION,
-            body_type=self.STATIC,
-            collision_type="blocker",
-        )
+        for blocker in blocker_list:
+            self.add_sprite_list(
+                blocker,
+                friction=FRICTION,
+                body_type=self.STATIC,
+                collision_type="blocker",
+            )
 
         # Add collision handlers
         self.add_collision_handler("player", "coin", begin_handler=coin_hit_handler)

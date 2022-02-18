@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 # Builtin
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING, List, Optional
 
 # Pip
 import arcade
@@ -34,14 +34,14 @@ class Game(arcade.View):
         The LevelInstance namedtuple which holds the data for this level.
     player: Optional[Player]
         The sprite for the playable character in the game.
-    wall_list: arcade.SpriteList
+    wall_list: Optional[arcade.SpriteList]
         The sprite list for the floor and crate sprites.
-    coin_list: arcade.SpriteList
-        The sprite list for the coin sprites.
+    coin_list: Optional[arcade.SpriteList]
+        The sprite list for the coin sprites.#
+    blocker_list: List[arcade.SpriteList]
+        A list containing sprite lists for each of the walls blocking progression.
     enemy_list: arcade.SpriteList
         The sprite list for the enemies.
-    blocker_list: arcade.SpriteList
-        The sprite list for the walls blocking progression.
     bullet_list: arcade.SpriteList
         The sprite list for the bullets.
     physics_engine: Optional[PhysicsEngine]
@@ -62,10 +62,10 @@ class Game(arcade.View):
         super().__init__()
         self.level_data: Optional[GameLevel] = None
         self.player: Optional[Player] = None
-        self.wall_list: arcade.SpriteList = arcade.SpriteList(use_spatial_hash=True)
-        self.coin_list: arcade.SpriteList = arcade.SpriteList(use_spatial_hash=True)
+        self.wall_list: Optional[arcade.SpriteList] = None
+        self.coin_list: Optional[arcade.SpriteList] = None
+        self.blocker_list: List[arcade.SpriteList] = []
         self.enemy_list: arcade.SpriteList = arcade.SpriteList(use_spatial_hash=True)
-        self.blocker_list: arcade.SpriteList = arcade.SpriteList(use_spatial_hash=True)
         self.bullet_list: arcade.SpriteList = arcade.SpriteList(use_spatial_hash=True)
         self.physics_engine: Optional[PhysicsEngine] = None
         self.camera: Optional[arcade.Camera] = None
@@ -99,11 +99,10 @@ class Game(arcade.View):
             arcade.exit()
             raise KeyError(f"No map available for level {level}")
 
-        # Load each tilemap layer into its own sprite list
+        # Load the floor and coin tilemap layer into its own sprite list
         tile_map = self.level_data.tilemap
         self.wall_list = tile_map.sprite_lists["Platforms"]
         self.coin_list = tile_map.sprite_lists["Coins"]
-        self.blocker_list = tile_map.sprite_lists["Walls"]
 
         # Create the player object
         player_obj = tile_map.sprite_lists["Player"][0]
@@ -116,6 +115,12 @@ class Game(arcade.View):
             self.enemy_list.append(
                 Enemy(enemy.center_x, enemy.center_y, textures["enemy"][0])
             )
+
+        # Create the blocker list
+        for blocker_count in range(self.level_data.blocker_count):
+            blocker = tile_map.sprite_lists[f"Walls{blocker_count+1}"]
+            blocker.enable_spatial_hashing()
+            self.blocker_list.append(blocker)
 
         # Set up the physics engine
         self.physics_engine = PhysicsEngine(GRAVITY, DAMPING)
@@ -141,6 +146,8 @@ class Game(arcade.View):
         assert self.camera is not None
         assert self.gui_camera is not None
         assert self.score_text is not None
+        assert self.wall_list is not None
+        assert self.coin_list is not None
 
         # Clear the screen
         self.clear()
@@ -152,9 +159,10 @@ class Game(arcade.View):
         self.wall_list.draw()
         self.coin_list.draw()
         self.enemy_list.draw()
-        self.blocker_list.draw()
         self.bullet_list.draw()
         self.player.draw()
+        for blocker in self.blocker_list:
+            blocker.draw()
 
         # Draw the score on the screen
         self.gui_camera.use()

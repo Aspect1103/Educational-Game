@@ -49,12 +49,6 @@ layer_options: Dict[str, Dict[str, Union[str, bool]]] = {
     "Platforms": {
         "use_spatial_hash": True,
     },
-    "Walls": {
-        "use_spatial_hash": True,
-    },
-    "Enemies": {
-        "use_spatial_hash": True,
-    },
     "Coins": {
         "use_spatial_hash": True,
     },
@@ -63,6 +57,6 @@ layer_options: Dict[str, Dict[str, Union[str, bool]]] = {
 # Create the levels
 levels: Dict[str, GameLevel] = {
     "1": GameLevel(
-        load_tilemap(level_path.joinpath("level_one.json"), layer_options), 3
+        load_tilemap(level_path.joinpath("level_one.json"), layer_options), 2
     )
 }
