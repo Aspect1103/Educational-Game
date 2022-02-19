@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 # Builtin
-from typing import TYPE_CHECKING, List, Optional
+from typing import TYPE_CHECKING, List, Optional, Tuple
 
 # Pip
 import arcade
@@ -10,6 +10,8 @@ import arcade
 from constants import (
     ATTACK_COOLDOWN,
     DAMPING,
+    FACING_LEFT,
+    FACING_RIGHT,
     GRAVITY,
     PLAYER_JUMP_FORCE,
     PLAYER_MOVE_FORCE,
@@ -56,6 +58,8 @@ class Game(arcade.View):
         Whether the left key is pressed or not.
     right_pressed: bool
         Whether the right key is pressed or not.
+    current_question: Tuple[bool, Optional[arcade.SpriteList]]
+        The current question which the user can answer.
     """
 
     def __init__(self) -> None:
@@ -79,6 +83,7 @@ class Game(arcade.View):
         )
         self.left_pressed: bool = False
         self.right_pressed: bool = False
+        self.current_question: Tuple[bool, Optional[arcade.SpriteList]] = (False, None)
 
     def __repr__(self) -> str:
         return f"<Game (Current window={self.window})>"
@@ -187,10 +192,12 @@ class Game(arcade.View):
 
         # Calculate the speed and direction of the player based on the keys pressed
         if self.left_pressed and not self.right_pressed:
+            self.player.facing = FACING_LEFT
             self.physics_engine.apply_force(self.player, (-PLAYER_MOVE_FORCE, 0))
             # Set the friction to 0 so the player doesn't stop suddenly
             self.physics_engine.set_friction(self.player, 0)
         elif self.right_pressed and not self.left_pressed:
+            self.player.facing = FACING_RIGHT
             self.physics_engine.apply_force(self.player, (PLAYER_MOVE_FORCE, 0))
             # Set the friction to 0 so the player doesn't stop suddenly
             self.physics_engine.set_friction(self.player, 0)
@@ -226,6 +233,9 @@ class Game(arcade.View):
             self.right_pressed = True
         elif key is arcade.key.SPACE and self.physics_engine.is_on_ground(self.player):
             self.physics_engine.apply_force(self.player, (0, PLAYER_JUMP_FORCE))
+        elif key is arcade.key.E:
+            print(self.window.views)
+            pass  # run education question
 
     def on_key_release(self, key: int, modifiers: int) -> None:
         """
@@ -268,7 +278,6 @@ class Game(arcade.View):
             and self.player.time_since_last_attack >= ATTACK_COOLDOWN
         ):
             self.player.ranged_attack(self.bullet_list)
-        print(self.bullet_list.sprite_list)
 
     def center_camera_on_player(self) -> None:
         """Centers the camera on the player."""
@@ -288,3 +297,15 @@ class Game(arcade.View):
 
         # Move the camera to the new position
         self.camera.move_to((screen_center_x, screen_center_y))  # noqa
+
+    def disable_blocker_wall(self) -> None:
+        """Disables the current blocker wall stored."""
+        # Make sure variables needed are valid
+        assert self.physics_engine is not None
+
+        # Remove the stored blocker wall
+        blocker_wall: arcade.SpriteList = self.current_question[1]
+        blocker_wall.visible = False
+        for sprite in blocker_wall:
+            self.physics_engine.remove_sprite(sprite)
+        self.current_question = (False, None)

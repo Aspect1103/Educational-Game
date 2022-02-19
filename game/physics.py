@@ -17,13 +17,14 @@ from entities.player import ScoreAmount
 
 if TYPE_CHECKING:
     from entities.player import Player
+    from views.game import Game
 
 
-def coin_hit_handler(player: Player, coin: arcade.Sprite, *_) -> bool:
+def coin_pickup_handler(player: Player, coin: arcade.Sprite, *_) -> bool:
     """
-    Handles collision between a player sprite and a coin sprite. This uses the
-    begin_handler which processes collision when two shapes are touching for the first
-    time.
+    Handles collision between a player sprite and a coin sprite as they touch. This uses
+    the  begin_handler which processes collision when two shapes are touching for the
+    first time.
 
     Parameters
     ----------
@@ -32,11 +33,58 @@ def coin_hit_handler(player: Player, coin: arcade.Sprite, *_) -> bool:
     coin: arcade.Sprite
         The coin sprite that was hit.
     """
+    # Delete the coin and update the player's score
     coin.remove_from_sprite_lists()
     player.update_score(ScoreAmount.COIN)  # noqa
     # Return False so pymunk will ignore processing the collision since we just want to
     # increase the score and remove the coin
     return False
+
+
+def blocker_touch_handler(player: Player, wall: arcade.Sprite, *_) -> bool:
+    """
+    Handles collision between a player sprite and a blocker wall sprite as they touch.
+    This uses the begin_handler which processes collision when two shapes are touching
+    for the first time.
+
+    Parameters
+    ----------
+    player: Player
+        The player sprite.
+    wall: arcade.Sprite
+        The wall sprite that the player has touched.
+    """
+    # Get the sprite list containing the wall sprites
+    blocker_list = wall.sprite_lists[0]
+    # Get the current view
+    game_view: Game = arcade.get_window().current_view  # noqa
+    # Set the current_question attribute
+    game_view.current_question = (True, blocker_list)
+    # Return True so pymunk will process the collision and stop the player going through
+    # the wall
+    return True
+
+
+def blocker_separate_handler(player: Player, wall: arcade.Sprite, *_) -> bool:
+    """
+    Handles collision between a player sprite and a blocker wall sprite after they have
+    separated. This uses the separate_handler which processes collision after two shapes
+    separate.
+
+    Parameters
+    ----------
+    player: Player
+        The player sprite.
+    wall: arcade.Sprite
+        The wall sprite that the player has touched.
+    """
+    # Get the current view
+    game_view: Game = arcade.get_window().current_view  # noqa
+    # Set the current_question attribute
+    game_view.current_question = (False, None)
+    # Return True so pymunk will process the collision and stop the player going through
+    # the wall
+    return True
 
 
 class PhysicsEngine(arcade.PymunkPhysicsEngine):
@@ -121,7 +169,13 @@ class PhysicsEngine(arcade.PymunkPhysicsEngine):
             )
 
         # Add collision handlers
-        self.add_collision_handler("player", "coin", begin_handler=coin_hit_handler)
+        self.add_collision_handler("player", "coin", begin_handler=coin_pickup_handler)
+        self.add_collision_handler(
+            "player", "blocker", begin_handler=blocker_touch_handler
+        )
+        self.add_collision_handler(
+            "player", "blocker", separate_handler=blocker_separate_handler
+        )
 
     def __repr__(self) -> str:
         return (

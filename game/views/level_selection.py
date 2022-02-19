@@ -119,7 +119,7 @@ class LevelSelection(arcade.View):
         )
 
     def __repr__(self) -> str:
-        return f"<GameSelection (Current window={self.window})>"
+        return f"<LevelSelection (Current window={self.window})>"
 
     def on_draw(self) -> None:
         """Render the screen."""
