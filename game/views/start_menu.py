@@ -71,7 +71,7 @@ class StartMenu(arcade.View):
     def __init__(self) -> None:
         super().__init__()
         self.manager: arcade.gui.UIManager = arcade.gui.UIManager()
-        vertical_box: arcade.gui.UIBoxLayout = arcade.gui.UIBoxLayout()
+        vertical_box = arcade.gui.UIBoxLayout()
 
         # Create background
         self.background: arcade.Texture = textures["background"][0]

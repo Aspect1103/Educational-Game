@@ -21,6 +21,7 @@ from entities.player import Player
 from levels.levels import levels
 from physics import PhysicsEngine
 from textures.textures import textures
+from views.question import Question
 
 if TYPE_CHECKING:
     from levels.levels import GameLevel
@@ -141,6 +142,8 @@ class Game(arcade.View):
         self.camera = arcade.Camera(self.window.width, self.window.height)
         self.gui_camera = arcade.Camera(self.window.width, self.window.height)
 
+    def on_show(self) -> None:
+        """Run setup logic when the view loads."""
         # Set the background color
         arcade.set_background_color(arcade.color.BABY_BLUE)
 
@@ -233,9 +236,20 @@ class Game(arcade.View):
             self.right_pressed = True
         elif key is arcade.key.SPACE and self.physics_engine.is_on_ground(self.player):
             self.physics_engine.apply_force(self.player, (0, PLAYER_JUMP_FORCE))
-        elif key is arcade.key.E:
-            print(self.window.views)
-            pass  # run education question
+        elif (
+            key is arcade.key.E
+            and self.physics_engine.is_on_ground(self.player)
+            and self.current_question[0]
+        ):
+            # Initialise the question view
+            question_view = Question()
+            self.window.views["Question"] = question_view
+
+            # Enable the question UI manager
+            question_view.manager.enable()
+
+            # Show the question view
+            self.window.show_view(question_view)
 
     def on_key_release(self, key: int, modifiers: int) -> None:
         """

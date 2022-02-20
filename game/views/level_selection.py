@@ -85,14 +85,13 @@ class LevelSelection(arcade.View):
     def __init__(self) -> None:
         super().__init__()
         self.manager: arcade.gui.UIManager = arcade.gui.UIManager()
-        vertical_box: arcade.gui.UIBoxLayout = arcade.gui.UIBoxLayout()
+        vertical_box = arcade.gui.UIBoxLayout()
 
         # Create background
         self.background: arcade.Texture = textures["background"][0]
 
         # Create the first row of levels
         first_horizontal_box = arcade.gui.UIBoxLayout(vertical=False)
-
         for count in range(5):
             new_level = LevelButton(text=str(count + 1), width=50, style=BUTTON_STYLE)
             first_horizontal_box.add(new_level.with_space_around(right=20))
