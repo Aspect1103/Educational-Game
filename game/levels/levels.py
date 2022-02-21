@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 # Builtin
+import json
 import pathlib
-from typing import Dict, NamedTuple, Union
+from typing import Dict, List, NamedTuple, Union
 
 # Pip
 import arcade
@@ -35,10 +36,13 @@ class GameLevel(NamedTuple):
         The loaded tilemap for the level.
     blocker_count: int
         The amount of blocker walls the level contains.
+    questions: List[Dict[str, str]]
+        A list of questions with their correct answer and an explanation.
     """
 
     tilemap: arcade.TileMap
     blocker_count: int
+    questions: List[Dict[str, str]]
 
 
 # Create the level path
@@ -55,8 +59,11 @@ layer_options: Dict[str, Dict[str, Union[str, bool]]] = {
 }
 
 # Create the levels
+level_one_path = level_path.joinpath("Level 1")
 levels: Dict[str, GameLevel] = {
     "1": GameLevel(
-        load_tilemap(level_path.joinpath("level_one.json"), layer_options), 2
+        load_tilemap(level_one_path.joinpath("level_one.json"), layer_options),
+        2,
+        json.loads(open(level_one_path.joinpath("questions.json")).read()),
     )
 }

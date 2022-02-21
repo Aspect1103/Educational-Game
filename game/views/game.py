@@ -229,6 +229,7 @@ class Game(arcade.View):
         # Make sure variables needed are valid
         assert self.player is not None
         assert self.physics_engine is not None
+        assert self.level_data is not None
 
         if key is arcade.key.A:
             self.left_pressed = True
@@ -241,8 +242,11 @@ class Game(arcade.View):
             and self.physics_engine.is_on_ground(self.player)
             and self.current_question[0]
         ):
+            # Set right_pressed to False to stop the player moving after the question
+            self.right_pressed = False
+
             # Initialise the question view
-            question_view = Question()
+            question_view = Question(self.level_data.questions[0])
             self.window.views["Question"] = question_view
 
             # Enable the question UI manager
