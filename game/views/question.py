@@ -131,8 +131,8 @@ class Question(arcade.View):
         # Create the question text
         self.question_text: arcade.gui.UITextArea = arcade.gui.UITextArea(
             text=self.question["question"],
-            width=500,
-            height=200,
+            width=750,
+            height=350,
             text_color=arcade.color.BLACK,
             font_size=24,
         )

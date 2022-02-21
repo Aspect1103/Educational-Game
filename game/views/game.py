@@ -61,6 +61,8 @@ class Game(arcade.View):
         Whether the right key is pressed or not.
     current_question: Tuple[bool, Optional[arcade.SpriteList]]
         The current question which the user can answer.
+    walls_completed: int
+        How many walls have been completed.
     """
 
     def __init__(self) -> None:
@@ -85,6 +87,7 @@ class Game(arcade.View):
         self.left_pressed: bool = False
         self.right_pressed: bool = False
         self.current_question: Tuple[bool, Optional[arcade.SpriteList]] = (False, None)
+        self.walls_completed: int = 0
 
     def __repr__(self) -> str:
         return f"<Game (Current window={self.window})>"
@@ -246,7 +249,7 @@ class Game(arcade.View):
             self.right_pressed = False
 
             # Initialise the question view
-            question_view = Question(self.level_data.questions[0])
+            question_view = Question(self.level_data.questions[self.walls_completed])
             self.window.views["Question"] = question_view
 
             # Enable the question UI manager
@@ -327,3 +330,4 @@ class Game(arcade.View):
         for sprite in blocker_wall:
             self.physics_engine.remove_sprite(sprite)
         self.current_question = (False, None)
+        self.walls_completed += 1

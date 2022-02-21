@@ -1,7 +1,12 @@
 [
   {
-    "answer": "f",
-    "explanation": "explain",
-    "question": "test?"
+    "answer": "True",
+    "explanation": "The equation is true because diving by a number is the same as multiplying by its reciprocal. Therefore, if 15/5=3 and 15*(1/5)=3, then they are the same.",
+    "question": "Is the following equation true or false? Answer either 'True' or 'False'. Equation: 15/5=15*(1/5)"
+  },
+  {
+    "answer": "",
+    "explanation": "",
+    "question": ""
   }
 ]
