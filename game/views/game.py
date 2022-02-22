@@ -108,6 +108,8 @@ class Game(arcade.View):
             arcade.exit()
             raise KeyError(f"No map available for level {level}")
 
+        print(self.level_data.questions)
+
         # Load the floor and coin tilemap layer into its own sprite list
         tile_map = self.level_data.tilemap
         self.wall_list = tile_map.sprite_lists["Platforms"]

@@ -64,6 +64,8 @@ levels: Dict[str, GameLevel] = {
     "1": GameLevel(
         load_tilemap(level_one_path.joinpath("level_one.json"), layer_options),
         2,
-        json.loads(open(level_one_path.joinpath("questions.json")).read()),
+        json.loads(
+            open(level_one_path.joinpath("questions.json"), encoding="utf8").read()
+        ),
     )
 }
