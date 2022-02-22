@@ -1,12 +1,12 @@
 [
   {
+    "answer": "7g",
+    "explanation": "You need to multiply the number of children by the cost per child. So, 7*g=7g.",
+    "question": "If g is the cost of admission for one child to the zoo, what is the cost for 7 children?"
+  },
+  {
     "answer": "ab/c",
     "explanation": "When multiplying two variables, the expression could be rearranged as ab and when dividing two variables, the expression could be rearranged as a/b.",
     "question": "Rearrange the expression 'a*b\u00f7c' so that no operators are used."
-  },
-  {
-    "answer": "",
-    "explanation": "",
-    "question": ""
   }
 ]

@@ -58,11 +58,14 @@ layer_options: Dict[str, Dict[str, Union[str, bool]]] = {
     },
 }
 
-# Create the levels
+# Create the levels. Level structure:
+#   First 6 cover Year 7.
+#   Next 7 cover Year 8.
+#   Last 7 cover Year 9.
 level_one_path = level_path.joinpath("Level 1")
 levels: Dict[str, GameLevel] = {
     "1": GameLevel(
-        load_tilemap(level_one_path.joinpath("level_one.json"), layer_options),
+        load_tilemap(level_one_path.joinpath("map.json"), layer_options),
         2,
         json.loads(
             open(level_one_path.joinpath("questions.json"), encoding="utf8").read()
