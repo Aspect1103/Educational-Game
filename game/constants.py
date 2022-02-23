@@ -24,3 +24,6 @@ GRAVITY = (0, -2000)
 DAMPING = 0.01  # This has to be set to 0.01 as 0 would make the player not move at all
 FRICTION = 1.0
 PLAYER_MASS = 1.0
+
+# Bullet constants
+BULLET_VELOCITY = 500

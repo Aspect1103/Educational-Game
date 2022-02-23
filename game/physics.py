@@ -16,14 +16,16 @@ from constants import (
 from entities.player import ScoreAmount
 
 if TYPE_CHECKING:
+    from entities.enemy import Enemy
+    from entities.entity import Bullet
     from entities.player import Player
     from views.game import Game
 
 
-def coin_pickup_handler(player: Player, coin: arcade.Sprite, *_) -> bool:
+def player_coin_pickup_handler(player: Player, coin: arcade.Sprite, *_) -> bool:
     """
     Handles collision between a player sprite and a coin sprite as they touch. This uses
-    the  begin_handler which processes collision when two shapes are touching for the
+    the begin_handler which processes collision when two shapes are touching for the
     first time.
 
     Parameters
@@ -41,7 +43,7 @@ def coin_pickup_handler(player: Player, coin: arcade.Sprite, *_) -> bool:
     return False
 
 
-def blocker_touch_handler(player: Player, wall: arcade.Sprite, *_) -> bool:
+def player_blocker_begin_handler(player: Player, wall: arcade.Sprite, *_) -> bool:
     """
     Handles collision between a player sprite and a blocker wall sprite as they touch.
     This uses the begin_handler which processes collision when two shapes are touching
@@ -65,7 +67,7 @@ def blocker_touch_handler(player: Player, wall: arcade.Sprite, *_) -> bool:
     return True
 
 
-def blocker_separate_handler(player: Player, wall: arcade.Sprite, *_) -> bool:
+def player_blocker_separate_handler(player: Player, wall: arcade.Sprite, *_) -> bool:
     """
     Handles collision between a player sprite and a blocker wall sprite after they have
     separated. This uses the separate_handler which processes collision after two shapes
@@ -85,6 +87,64 @@ def blocker_separate_handler(player: Player, wall: arcade.Sprite, *_) -> bool:
     # Return True so pymunk will process the collision and stop the player going through
     # the wall
     return True
+
+
+def player_bullet_begin_handler(player: Player, bullet: Bullet, *_) -> bool:
+    """
+    Handles collision between a player sprite and a bullet sprite as they touch. This
+    uses the begin_handler which processes collision when two shapes are touching for
+    the first time.
+
+    Parameters
+    ----------
+    player: Player
+        The player sprite.
+    bullet: Bullet
+        The bullet sprite which hit the player.
+    """
+    print("player")
+    # Return False so pymunk will ignore processing the collision since we just want to
+    # decrease the player's health and remove the bullet
+    return False
+
+
+def enemy_bullet_begin_handler(enemy: Enemy, bullet: Bullet, *_) -> bool:
+    """
+    Handles collision between an enemy sprite and a bullet sprite as they touch. This
+    uses the begin_handler which processes collision when two shapes are touching for
+    the first time.
+
+    Parameters
+    ----------
+    enemy: Enemy
+        The enemy sprite.
+    bullet: Bullet
+        The bullet sprite which hit the enemy.
+    """
+    print("enemy")
+    # Return False so pymunk will ignore processing the collision since we just want to
+    # decrease the enemy's health and remove the bullet
+    return False
+
+
+def bullet_wall_begin_handler(bullet: Bullet, wall: arcade.Sprite, *_) -> bool:
+    """
+    Handles collision between a bullet and a wall sprite as they touch. This uses the
+    begin_handler which processes collision when two shapes are touching for the first
+    time.
+
+    Parameters
+    ----------
+    bullet: Bullet
+        The bullet sprite which hit the wall.
+    wall: arcade.Sprite
+        The wall sprite which the bullet hit
+    """
+    # Remove the bullet
+    bullet.remove_from_sprite_lists()
+    # Return False so pymunk will ignore processing the collision since we just want to
+    # remove the bullet
+    return False
 
 
 class PhysicsEngine(arcade.PymunkPhysicsEngine):
@@ -156,7 +216,10 @@ class PhysicsEngine(arcade.PymunkPhysicsEngine):
 
         # Add the coin sprites to the physics engine
         self.add_sprite_list(
-            coin_list, friction=FRICTION, body_type=self.STATIC, collision_type="coin"
+            coin_list,
+            friction=FRICTION,
+            body_type=self.KINEMATIC,
+            collision_type="coin",
         )
 
         # Add the blocker sprites to the physics engine
@@ -169,16 +232,46 @@ class PhysicsEngine(arcade.PymunkPhysicsEngine):
             )
 
         # Add collision handlers
-        self.add_collision_handler("player", "coin", begin_handler=coin_pickup_handler)
         self.add_collision_handler(
-            "player", "blocker", begin_handler=blocker_touch_handler
+            "player", "coin", begin_handler=player_coin_pickup_handler
         )
         self.add_collision_handler(
-            "player", "blocker", separate_handler=blocker_separate_handler
+            "player", "blocker", begin_handler=player_blocker_begin_handler
+        )
+        self.add_collision_handler(
+            "player", "blocker", separate_handler=player_blocker_separate_handler
+        )
+        self.add_collision_handler(
+            "player", "bullet", begin_handler=player_bullet_begin_handler
+        )
+        self.add_collision_handler(
+            "enemy", "bullet", begin_handler=enemy_bullet_begin_handler
+        )
+        self.add_collision_handler(
+            "bullet", "wall", begin_handler=bullet_wall_begin_handler
+        )
+        self.add_collision_handler(
+            "bullet", "blocker", begin_handler=bullet_wall_begin_handler
         )
 
     def __repr__(self) -> str:
         return (
             f"<PhysicsEngine (Gravity={self.gravity}) (Damping={self.damping}) (Sprite"
             f" count={len(self.sprites)})>"
+        )
+
+    def add_bullet(self, bullet: Bullet) -> None:
+        """
+        Adds a bullet to the physics engine.
+
+        Parameters
+        ----------
+        bullet: Bullet
+            The bullet to add to the physics engine.
+        """
+        self.add_sprite(
+            bullet,
+            moment_of_inertia=self.MOMENT_INF,
+            body_type=self.KINEMATIC,
+            collision_type="bullet",
         )

@@ -55,6 +55,8 @@ class Game(arcade.View):
         The camera used for visualising the GUI elements.
     score_text: arcade.Text
         The text object used for displaying the score.
+    blocker_text: arcade.Text
+        The text object used for telling the user they can activate the blocker wall.
     left_pressed: bool
         Whether the left key is pressed or not.
     right_pressed: bool
@@ -81,6 +83,13 @@ class Game(arcade.View):
             "Score: 0",
             10,
             10,
+            arcade.color.BLACK,
+            20,
+        )
+        self.blocker_text: arcade.Text = arcade.Text(
+            "Press 'E' to answer a question",
+            self.window.width / 2 - 175,
+            self.window.height / 2 - 200,
             arcade.color.BLACK,
             20,
         )
@@ -179,6 +188,10 @@ class Game(arcade.View):
         self.gui_camera.use()
         self.score_text.value = f"Score: {self.player.score}"
         self.score_text.draw()
+
+        # Draw the key hint on the screen for the blocker wall
+        if self.current_question[0]:
+            self.blocker_text.draw()
 
     def on_update(self, delta_time: float) -> None:
         """
@@ -298,7 +311,7 @@ class Game(arcade.View):
             button is arcade.MOUSE_BUTTON_LEFT
             and self.player.time_since_last_attack >= ATTACK_COOLDOWN
         ):
-            self.player.ranged_attack(self.bullet_list)
+            self.player.ranged_attack(self.physics_engine, self.bullet_list)
 
     def center_camera_on_player(self) -> None:
         """Centers the camera on the player."""

@@ -36,13 +36,13 @@ class GameLevel(NamedTuple):
         The loaded tilemap for the level.
     blocker_count: int
         The amount of blocker walls the level contains.
-    questions: List[Dict[str, str]]
+    questions: List[Dict[str, Union[List[str], str]]]
         A list of questions with their correct answer and an explanation.
     """
 
     tilemap: arcade.TileMap
     blocker_count: int
-    questions: List[Dict[str, str]]
+    questions: List[Dict[str, Union[List[str], str]]]
 
 
 # Create the level path

@@ -1,12 +1,24 @@
 [
   {
-    "answer": "",
-    "explanation": "",
-    "question": ""
+    "answers": [
+      "x=1, y=2",
+      "x=2, y=2",
+      "x=1, y=1",
+      "x=3, y=1"
+    ],
+    "correct": "x=1, y=2",
+    "explanation": "You can substitute y=2x into 3x+y=5 like 3x+2x=5 then solve for x and substitute again to find y.",
+    "question": "Use the substitution method to solve these simultaneous equations: y=2x, 3x+y=5."
   },
   {
-    "answer": "",
-    "explanation": "",
-    "question": ""
+    "answers": [
+      "4, 5, ...",
+      "5, 6, ...",
+      "4, 3, ...",
+      "3, 2, ..."
+    ],
+    "correct": "5, 6, ...",
+    "explanation": "'>' means greater than so you should choose all the values that are greater than 4.",
+    "question": "Given that x is a whole number, what are the possible values of x if x > 4?"
   }
 ]

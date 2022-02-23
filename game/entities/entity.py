@@ -1,13 +1,16 @@
 from __future__ import annotations
 
 # Builtin
-from typing import Tuple
+from typing import TYPE_CHECKING, Tuple
 
 # Pip
 import arcade
 
 # Custom
-from constants import FACING_RIGHT, SPRITE_SCALE
+from constants import BULLET_VELOCITY, FACING_RIGHT, SPRITE_SCALE
+
+if TYPE_CHECKING:
+    from physics import PhysicsEngine
 
 
 class Bullet(arcade.SpriteSolidColor):
@@ -80,16 +83,28 @@ class Entity(arcade.Sprite):
     def __repr__(self) -> str:
         return f"<Entity (Position=({self.center_x}, {self.center_y}))>"
 
-    def ranged_attack(self, bullet_list: arcade.SpriteList) -> None:
+    def ranged_attack(
+        self, physics: PhysicsEngine, bullet_list: arcade.SpriteList
+    ) -> None:
         """
         Spawns a bullet in a specific direction.
 
         Parameters
         ----------
+        physics: PhysicsEngine
+            The physics engine to register the bullet with.
         bullet_list: arcade.SpriteList
             The sprite list to add the bullet to.
         """
         self.time_since_last_attack = 0
-        bullet_list.append(
-            Bullet(self.center_x, self.center_y, 54, 9, arcade.color.RED, self.facing)
+        center_x = self.center_x
+        if self.facing is FACING_RIGHT:
+            center_x += 48
+        else:
+            center_x -= 48
+        new_bullet = Bullet(
+            center_x, self.center_y, 50, 10, arcade.color.RED, self.facing
         )
+        physics.add_bullet(new_bullet)
+        physics.set_velocity(new_bullet, (BULLET_VELOCITY * new_bullet.direction, 0))
+        bullet_list.append(new_bullet)

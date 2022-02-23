@@ -113,7 +113,7 @@ class LevelSelection(arcade.View):
         # Register the UI elements
         self.manager.add(
             arcade.gui.UIAnchorWidget(
-                anchor_x="center_x", anchor_y="center_y", child=vertical_box
+                anchor_x="center", anchor_y="center", child=vertical_box
             )
         )
 

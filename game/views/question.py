@@ -15,14 +15,12 @@ if TYPE_CHECKING:
     from window import Window
 
 
-class SubmitButton(arcade.gui.UIFlatButton):
-    """A button which will test if the answer is correct when pressed."""
-
-    already_clicked: bool = False
+class InputButton(arcade.gui.UIFlatButton):
+    """A button which will submit one of four answers when pressed."""
 
     def __repr__(self) -> str:
         return (
-            f"<SubmitButton (Position=({self.center_x}, {self.center_y}))"
+            f"<InputButton (Position=({self.center_x}, {self.center_y}))"
             f" (Width={self.width}) (Height={self.height})>"
         )
 
@@ -33,14 +31,11 @@ class SubmitButton(arcade.gui.UIFlatButton):
         current_view: Question = window.current_view  # noqa
 
         # Test if the user has already submitted an answer
-        if current_view.already_submitted:
+        if current_view.submitted:
             return
 
-        # Get the input box's text
-        current_text = current_view.input_box.text
-
         # Test if the answer is correct
-        if current_text == current_view.question["answer"]:
+        if self.text == current_view.question["correct"]:
             # Get the game view and disable the blocker wall
             game_view: Game = window.views["Game"]  # noqa
             game_view.disable_blocker_wall()
@@ -57,7 +52,7 @@ class SubmitButton(arcade.gui.UIFlatButton):
             # Display the correct answer
             current_view.question_text.text = (
                 f"{current_view.question_text.text}\n\nIncorrect, return to the game"
-                " and try again. Answer Explanation:"
+                " and try again. Explanation:"
                 f" {current_view.question['explanation']}"
             )
 
@@ -66,8 +61,8 @@ class SubmitButton(arcade.gui.UIFlatButton):
             current_view.exit_button.with_space_around(top=20)
         )
 
-        # Set already_submitted so the user can't submit again
-        current_view.already_submitted = True
+        # Set submitted so the user can't submit again
+        current_view.submitted = True
 
 
 class ExitButton(arcade.gui.UIFlatButton):
@@ -101,17 +96,14 @@ class Question(arcade.View):
 
     Attributes
     ----------
-    already_submitted: bool
-        Whether or not the user has submitted an answer already.
+    submitted: bool
+        Whether or not the user has already submitted an answer.
     manager: arcade.gui.UIManager
         Manages all the different UI elements.
     question_text: arcade.gui.UITextArea
         Displays the question to the user for them to answer. This is stored as an
         instance variable, so we can change its text if the user gets the question
         wrong.
-    input_box: arcade.gui.UIInputText
-        The input box used for capturing the user's answer. This is stored as an
-        instance variable, so we can access it from the submit box.
     exit_button: ExitButton
         A button which will return to the main game when pressed. This will only be
         enabled once the user submits their answer.
@@ -124,7 +116,7 @@ class Question(arcade.View):
     def __init__(self, question: Dict[str, str]) -> None:
         super().__init__()
         self.question: Dict[str, str] = question
-        self.already_submitted: bool = False
+        self.submitted: bool = False
         self.manager: arcade.gui.UIManager = arcade.gui.UIManager()
         self.vertical_box: arcade.gui.UIBoxLayout = arcade.gui.UIBoxLayout()
 
@@ -138,33 +130,22 @@ class Question(arcade.View):
         )
         self.vertical_box.add(self.question_text)
 
-        # Create the user input/answering section
-        vertical_input = arcade.gui.UIBoxLayout()
-        horizontal_box = arcade.gui.UIBoxLayout(vertical=False)
-
-        # Create the input section
+        # Create the input hint
         input_label = arcade.gui.UILabel(
             text="Type your answer below:",
             width=350,
             height=40,
             text_color=arcade.color.BLACK,
             font_size=24,
-            align="center",
         )
-        vertical_input.add(input_label)
-        self.input_box: arcade.gui.UIInputText = arcade.gui.UIInputText(
-            width=400,
-            height=35,
-            text_color=arcade.color.BLACK,
-            font_size=24,
-        )
-        vertical_input.add(self.input_box.with_border(width=4))
-        horizontal_box.add(vertical_input.with_space_around(right=100))
+        self.vertical_box.add(input_label)
 
-        # Create the submitting section
-        submit_box = SubmitButton(text="Submit", width=125, style=BUTTON_STYLE)
-        horizontal_box.add(submit_box)
-        self.vertical_box.add(horizontal_box)
+        # Create the answers
+        horizontal_box = arcade.gui.UIBoxLayout(vertical=False)
+        for answer in self.question["answers"]:
+            input_box = InputButton(text=answer, width=100, style=BUTTON_STYLE)
+            horizontal_box.add(input_box.with_space_around(right=20))
+        self.vertical_box.add(horizontal_box.with_space_around(bottom=20))
 
         # Create an exit button (this is hidden until the user gets the question wrong)
         self.exit_button: ExitButton = ExitButton(
@@ -174,7 +155,7 @@ class Question(arcade.View):
         # Register the UI elements
         self.manager.add(
             arcade.gui.UIAnchorWidget(
-                anchor_x="center_x", anchor_y="center_y", child=self.vertical_box
+                anchor_x="center", anchor_y="center", child=self.vertical_box
             )
         )
 
