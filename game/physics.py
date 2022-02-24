@@ -97,7 +97,10 @@ def player_bullet_begin_handler(player: Player, bullet: Bullet, *_) -> bool:
     bullet: Bullet
         The bullet sprite which hit the player.
     """
-    print("player")
+    # Deal damage to the player
+    player.deal_damage()
+    # Remove the bullet
+    bullet.remove_from_sprite_lists()
     # Return False so pymunk will ignore processing the collision since we just want to
     # decrease the player's health and remove the bullet
     return False
@@ -116,7 +119,10 @@ def enemy_bullet_begin_handler(enemy: Enemy, bullet: Bullet, *_) -> bool:
     bullet: Bullet
         The bullet sprite which hit the enemy.
     """
-    print("enemy")
+    # Deal damage to the enemy
+    enemy.deal_damage()
+    # Remove the bullet
+    bullet.remove_from_sprite_lists()
     # Return False so pymunk will ignore processing the collision since we just want to
     # decrease the enemy's health and remove the bullet
     return False
@@ -136,7 +142,12 @@ def bullet_wall_begin_handler(bullet: Bullet, wall: arcade.Sprite, *_) -> bool:
         The wall sprite which the bullet hit
     """
     # Remove the bullet
-    bullet.remove_from_sprite_lists()
+    try:
+        bullet.remove_from_sprite_lists()
+    except AttributeError:
+        # An error randomly occurs when a collision is detected between a bullet and a
+        # wall
+        pass
     # Return False so pymunk will ignore processing the collision since we just want to
     # remove the bullet
     return False

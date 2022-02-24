@@ -26,17 +26,21 @@ class Enemy(Entity):
         The y position of the enemy.
     texture: arcade.Texture
         The sprite which represents this enemy.
+    health: int
+        The health of the entity.
     """
 
-    def __init__(self, x: float, y: float, texture: arcade.Texture) -> None:
-        super().__init__(x, y, texture)
+    def __init__(
+        self, x: float, y: float, texture: arcade.Texture, health: int
+    ) -> None:
+        super().__init__(x, y, texture, health)
 
     def __repr__(self) -> str:
         return f"<Enemy (Position=({self.center_x}, {self.center_y}))>"
 
     def calculate_movement(
         self, player: Player, walls: arcade.SpriteList
-    ) -> Tuple[float, float]:
+    ) -> Tuple[Tuple[float, float], int]:
         """
         Moves towards the player at a constant speed if they are within 5 tiles of the
         player and the enemy has line of sight.
@@ -50,8 +54,9 @@ class Enemy(Entity):
 
         Returns
         -------
-        Tuple[float, float]
-            The calculated force to apply to the enemy to move it towards the player.
+        Tuple[Tuple[float, float], int]
+            A tuple containing the calculated force to apply to the enemy to move it
+            towards the player and the new direction the enemy should face.
         """
         if arcade.has_line_of_sight(
             (self.center_x, self.center_y),
@@ -65,6 +70,6 @@ class Enemy(Entity):
             else:
                 direction = -1
             # Apply the movement force
-            return direction * ENEMY_MOVEMENT_FORCE, 0
+            return (direction * ENEMY_MOVEMENT_FORCE, 0), direction
         # Enemy does not have line of sight and is not within range
-        return 0, 0
+        return (0, 0), self.facing

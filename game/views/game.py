@@ -8,11 +8,12 @@ import arcade
 
 # Custom
 from constants import (
-    ATTACK_COOLDOWN,
     DAMPING,
+    ENEMY_ATTACK_COOLDOWN,
     FACING_LEFT,
     FACING_RIGHT,
     GRAVITY,
+    PLAYER_ATTACK_COOLDOWN,
     PLAYER_JUMP_FORCE,
     PLAYER_MOVE_FORCE,
 )
@@ -53,7 +54,7 @@ class Game(arcade.View):
         The camera used for moving the viewport around the screen.
     gui_camera: Optional[arcade.Camera]
         The camera used for visualising the GUI elements.
-    score_text: arcade.Text
+    player_text: arcade.Text
         The text object used for displaying the score.
     blocker_text: arcade.Text
         The text object used for telling the user they can activate the blocker wall.
@@ -79,8 +80,8 @@ class Game(arcade.View):
         self.physics_engine: Optional[PhysicsEngine] = None
         self.camera: Optional[arcade.Camera] = None
         self.gui_camera: Optional[arcade.Camera] = None
-        self.score_text: arcade.Text = arcade.Text(
-            "Score: 0",
+        self.player_text: arcade.Text = arcade.Text(
+            "Score: 0  Health: 0",
             10,
             10,
             arcade.color.BLACK,
@@ -125,13 +126,13 @@ class Game(arcade.View):
         # Create the player object
         player_obj = tile_map.sprite_lists["Player"][0]
         self.player = Player(
-            player_obj.center_x, player_obj.center_y, textures["player"][0]
+            player_obj.center_x, player_obj.center_y, textures["player"][0], 100
         )
 
         # Create the enemies
         for enemy in tile_map.sprite_lists["Enemies"]:
             self.enemy_list.append(
-                Enemy(enemy.center_x, enemy.center_y, textures["enemy"][0])
+                Enemy(enemy.center_x, enemy.center_y, textures["enemy"][0], 10)
             )
 
         # Create the blocker list
@@ -154,6 +155,9 @@ class Game(arcade.View):
         self.camera = arcade.Camera(self.window.width, self.window.height)
         self.gui_camera = arcade.Camera(self.window.width, self.window.height)
 
+        # Schedule the enemy attack every ENEMY_ATTACK_COOLDOWN seconds
+        arcade.schedule(self.schedule_enemy_attack, ENEMY_ATTACK_COOLDOWN)
+
     def on_show(self) -> None:
         """Run setup logic when the view loads."""
         # Set the background color
@@ -165,7 +169,7 @@ class Game(arcade.View):
         assert self.player is not None
         assert self.camera is not None
         assert self.gui_camera is not None
-        assert self.score_text is not None
+        assert self.player_text is not None
         assert self.wall_list is not None
         assert self.coin_list is not None
 
@@ -186,8 +190,10 @@ class Game(arcade.View):
 
         # Draw the score on the screen
         self.gui_camera.use()
-        self.score_text.value = f"Score: {self.player.score}"
-        self.score_text.draw()
+        self.player_text.value = (
+            f"Score: {self.player.score}  Health: {self.player.health}"
+        )
+        self.player_text.draw()
 
         # Draw the key hint on the screen for the blocker wall
         if self.current_question[0]:
@@ -205,6 +211,16 @@ class Game(arcade.View):
         # Make sure variables needed are valid
         assert self.physics_engine is not None
         assert self.player is not None
+
+        # Check if the enemies are dead
+        for enemy in self.enemy_list:
+            if enemy.health <= 0:  # noqa
+                enemy.remove_from_sprite_lists()
+
+        # Check if the player is dead
+        if self.player.health <= 0:
+            # END GAME
+            arcade.exit()
 
         # Update the player's time since last attack
         self.player.time_since_last_attack += delta_time
@@ -233,8 +249,11 @@ class Game(arcade.View):
         for blocker in self.blocker_list:
             line_of_sight_list.extend(blocker)
         for enemy in self.enemy_list:
-            force = enemy.calculate_movement(self.player, line_of_sight_list)  # noqa
+            force, direction = enemy.calculate_movement(  # noqa
+                self.player, line_of_sight_list
+            )
             self.physics_engine.apply_force(enemy, force)
+            enemy.facing = direction
 
         # Update the physics engine
         self.physics_engine.step()
@@ -318,9 +337,9 @@ class Game(arcade.View):
 
         if (
             button is arcade.MOUSE_BUTTON_LEFT
-            and self.player.time_since_last_attack >= ATTACK_COOLDOWN
+            and self.player.time_since_last_attack >= PLAYER_ATTACK_COOLDOWN
         ):
-            self.player.ranged_attack(self.physics_engine, self.bullet_list)
+            self.player.ranged_attack(self.bullet_list)
 
     def center_camera_on_player(self) -> None:
         """Centers the camera on the player."""
@@ -353,3 +372,8 @@ class Game(arcade.View):
             self.physics_engine.remove_sprite(sprite)
         self.current_question = (False, None)
         self.walls_completed += 1
+
+    def schedule_enemy_attack(self, _) -> None:
+        """Makes an enemy attack every ENEMY_ATTACK_COOLDOWN second(s)."""
+        for enemy in self.enemy_list:
+            enemy.ranged_attack(self.bullet_list)  # noqa

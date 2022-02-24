@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Tuple
 import arcade
 
 # Custom
-from constants import BULLET_VELOCITY, FACING_RIGHT, SPRITE_SCALE
+from constants import BULLET_DAMAGE, BULLET_VELOCITY, FACING_RIGHT, SPRITE_SCALE
 
 if TYPE_CHECKING:
     from physics import PhysicsEngine
@@ -63,36 +63,37 @@ class Entity(arcade.Sprite):
         The y position of the entity.
     texture: arcade.Texture
         The sprite which represents this entity.
+    health: int
+        The health of the entity.
 
     Attributes
     ----------
     time_since_last_attack: float
         How long it has been since the last attack.
     facing: int
-        The direction the player is facing. 1 is right and -1 is left.
+        The direction the entity is facing. 1 is right and -1 is left.
     """
 
-    def __init__(self, x: float, y: float, texture: arcade.Texture) -> None:
+    def __init__(
+        self, x: float, y: float, texture: arcade.Texture, health: int
+    ) -> None:
         super().__init__(scale=SPRITE_SCALE)
         self.center_x: float = x
         self.center_y: float = y
         self.texture: arcade.Texture = texture
+        self.health: int = health
         self.time_since_last_attack: float = 0
         self.facing: int = FACING_RIGHT
 
     def __repr__(self) -> str:
         return f"<Entity (Position=({self.center_x}, {self.center_y}))>"
 
-    def ranged_attack(
-        self, physics: PhysicsEngine, bullet_list: arcade.SpriteList
-    ) -> None:
+    def ranged_attack(self, bullet_list: arcade.SpriteList) -> None:
         """
         Spawns a bullet in a specific direction.
 
         Parameters
         ----------
-        physics: PhysicsEngine
-            The physics engine to register the bullet with.
         bullet_list: arcade.SpriteList
             The sprite list to add the bullet to.
         """
@@ -105,6 +106,11 @@ class Entity(arcade.Sprite):
         new_bullet = Bullet(
             center_x, self.center_y, 50, 10, arcade.color.RED, self.facing
         )
+        physics: PhysicsEngine = self.physics_engines[0]
         physics.add_bullet(new_bullet)
         physics.set_velocity(new_bullet, (BULLET_VELOCITY * new_bullet.direction, 0))
         bullet_list.append(new_bullet)
+
+    def deal_damage(self) -> None:
+        """Deals damage to the entity."""
+        self.health -= BULLET_DAMAGE

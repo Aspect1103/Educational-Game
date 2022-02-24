@@ -15,7 +15,8 @@ class ScoreAmount(Enum):
 
     COIN: int = 1
     ENEMY: int = 5
-    QUESTION: int = 10
+    QUESTION_CORRECT: int = 10
+    QUESTION_WRONG: int = -5
 
 
 class Player(Entity):
@@ -30,6 +31,8 @@ class Player(Entity):
         The y position of the player.
     texture: arcade.Texture
         The sprite which represents this player.
+    health: int
+        The health of the entity.
 
     Attributes
     ----------
@@ -37,8 +40,10 @@ class Player(Entity):
         The score for the player.
     """
 
-    def __init__(self, x: float, y: float, texture: arcade.Texture) -> None:
-        super().__init__(x, y, texture)
+    def __init__(
+        self, x: float, y: float, texture: arcade.Texture, health: int
+    ) -> None:
+        super().__init__(x, y, texture, health)
         self.score: int = 0
 
     def __repr__(self) -> str:

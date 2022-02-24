@@ -26,9 +26,10 @@ class InputButton(arcade.gui.UIFlatButton):
 
     def on_click(self, _) -> None:
         """Called when the button is clicked."""
-        # Get the current view
+        # Get the current view and the game view
         window: Window = arcade.get_window()
         current_view: Question = window.current_view  # noqa
+        game_view: Game = window.views["Game"]  # noqa
 
         # Test if the user has already submitted an answer
         if current_view.submitted:
@@ -36,8 +37,7 @@ class InputButton(arcade.gui.UIFlatButton):
 
         # Test if the answer is correct
         if self.text == current_view.question["correct"]:
-            # Get the game view and disable the blocker wall
-            game_view: Game = window.views["Game"]  # noqa
+            # Disable the blocker wall
             game_view.disable_blocker_wall()
 
             # Display congrats
@@ -47,7 +47,7 @@ class InputButton(arcade.gui.UIFlatButton):
             )
 
             # Add points to the user
-            game_view.player.update_score(ScoreAmount.QUESTION)  # noqa
+            game_view.player.update_score(ScoreAmount.QUESTION_CORRECT)  # noqa
         else:
             # Display the correct answer
             current_view.question_text.text = (
@@ -55,6 +55,9 @@ class InputButton(arcade.gui.UIFlatButton):
                 " and try again. Explanation:"
                 f" {current_view.question['explanation']}"
             )
+
+            # Remove points from the user
+            game_view.player.update_score(ScoreAmount.QUESTION_WRONG)
 
         # Reveal the exit button
         current_view.vertical_box.add(
