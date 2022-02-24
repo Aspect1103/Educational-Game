@@ -57,7 +57,7 @@ class InputButton(arcade.gui.UIFlatButton):
             )
 
             # Remove points from the user
-            game_view.player.update_score(ScoreAmount.QUESTION_WRONG)
+            game_view.player.update_score(ScoreAmount.QUESTION_WRONG)  # noqa
 
         # Reveal the exit button
         current_view.vertical_box.add(

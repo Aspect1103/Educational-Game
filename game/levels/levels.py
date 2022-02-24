@@ -56,6 +56,9 @@ layer_options: Dict[str, Dict[str, Union[str, bool]]] = {
     "Coins": {
         "use_spatial_hash": True,
     },
+    "Door": {
+        "use_spatial_hash": True,
+    },
 }
 
 # Create the levels

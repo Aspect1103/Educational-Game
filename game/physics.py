@@ -73,7 +73,7 @@ def player_blocker_separate_handler(player: Player, wall: arcade.Sprite, *_) -> 
     player: Player
         The player sprite.
     wall: arcade.Sprite
-        The wall sprite that the player has touched.
+        The wall sprite that the player has separated from.
     """
     # Get the current view
     game_view: Game = arcade.get_window().current_view  # noqa
@@ -153,6 +153,50 @@ def bullet_wall_begin_handler(bullet: Bullet, wall: arcade.Sprite, *_) -> bool:
     return False
 
 
+def player_door_begin_handler(player: Player, door: arcade.Sprite, *_) -> bool:
+    """
+    Handles collision between the player and a door sprite as they touch. This uses the
+    begin_handler which processes collision when two shapes are touching for the first
+    time.
+
+    Parameters
+    ----------
+    player: Player
+        The player sprite.
+    door: arcade.Sprite
+        The door sprite that the player has touched.
+    """
+    # Get the current view
+    game_view: Game = arcade.get_window().current_view  # noqa
+    # Set the is_touching_door attribute
+    game_view.is_touching_door = True
+    # Return True so pymunk will process the collision and stop the player going through
+    # the wall
+    return False
+
+
+def player_door_separate_handler(player: Player, door: arcade.Sprite, *_) -> bool:
+    """
+    Handles collision between a player sprite and a door wall sprite after they have
+    separated. This uses the separate_handler which processes collision after two shapes
+    separate.
+
+    Parameters
+    ----------
+    player: Player
+        The player sprite.
+    door: arcade.Sprite
+        The door sprite that the player has separated from.
+    """
+    # Get the current view
+    game_view: Game = arcade.get_window().current_view  # noqa
+    # Reset the is_touching_door attribute
+    game_view.is_touching_door = False
+    # Return True so pymunk will process the collision and stop the player going through
+    # the wall
+    return False
+
+
 class PhysicsEngine(arcade.PymunkPhysicsEngine):
     """
     An abstracted version of the Pymunk Physics Engine which eases setting up a physics
@@ -179,6 +223,7 @@ class PhysicsEngine(arcade.PymunkPhysicsEngine):
         enemy_list: arcade.SpriteList,
         coin_list: arcade.SpriteList,
         blocker_list: List[arcade.SpriteList],
+        door_list: arcade.SpriteList,
     ) -> None:
         """
         Setups up the various sprites needed for the physics engine to work properly.
@@ -195,6 +240,8 @@ class PhysicsEngine(arcade.PymunkPhysicsEngine):
             The sprite list for the coin sprites.
         blocker_list: List[arcade.SpriteList]
             A list containing sprite lists for each blocker wall.
+        door_list: arcade.SpriteList
+            The sprite list for the door sprites.
         """
         # Add the player sprite to the physics engine
         self.add_sprite(
@@ -206,9 +253,7 @@ class PhysicsEngine(arcade.PymunkPhysicsEngine):
         )
 
         # Add the wall sprites to the physics engine
-        self.add_sprite_list(
-            wall_list, friction=FRICTION, body_type=self.STATIC, collision_type="wall"
-        )
+        self.add_sprite_list(wall_list, body_type=self.STATIC, collision_type="wall")
 
         # Add the enemy sprites to the physics engine
         self.add_sprite_list(
@@ -231,10 +276,16 @@ class PhysicsEngine(arcade.PymunkPhysicsEngine):
         for blocker in blocker_list:
             self.add_sprite_list(
                 blocker,
-                friction=FRICTION,
                 body_type=self.STATIC,
                 collision_type="blocker",
             )
+
+        # Add the door sprites to the physics engine
+        self.add_sprite_list(
+            door_list,
+            body_type=self.KINEMATIC,
+            collision_type="door",
+        )
 
         # Add collision handlers
         self.add_collision_handler(
@@ -257,6 +308,12 @@ class PhysicsEngine(arcade.PymunkPhysicsEngine):
         )
         self.add_collision_handler(
             "bullet", "blocker", begin_handler=bullet_wall_begin_handler
+        )
+        self.add_collision_handler(
+            "player", "door", begin_handler=player_door_begin_handler
+        )
+        self.add_collision_handler(
+            "player", "door", separate_handler=player_door_separate_handler
         )
 
     def __repr__(self) -> str:

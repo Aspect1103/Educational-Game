@@ -61,6 +61,20 @@
     },
     {
       "compression": "zlib",
+      "data": "eJxjYBgFo2AUjIJRMAqoBzgH2gFQwDHQDhikAAAfWAAS",
+      "encoding": "base64",
+      "height": 15,
+      "id": 7,
+      "name": "Door",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 34,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "compression": "zlib",
       "data": "eJxjYKANYKeRuaSCUXegglF3oIJRd6CCUXegglF3oIJRdwwPAACb1wBc",
       "encoding": "base64",
       "height": 15,
@@ -88,7 +102,7 @@
       "y": 0
     }
   ],
-  "nextlayerid": 7,
+  "nextlayerid": 8,
   "nextobjectid": 1,
   "orientation": "orthogonal",
   "renderorder": "right-down",
@@ -97,7 +111,7 @@
   "tilesets": [
     {
       "firstgid": 1,
-      "source": "tileset.tsx"
+      "source": "tileset.json"
     }
   ],
   "tilewidth": 128,

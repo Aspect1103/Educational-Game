@@ -22,6 +22,7 @@ from entities.player import Player
 from levels.levels import levels
 from physics import PhysicsEngine
 from textures.textures import textures
+from views.end_screen import EndScreen
 from views.question import Question
 
 if TYPE_CHECKING:
@@ -41,7 +42,9 @@ class Game(arcade.View):
     wall_list: Optional[arcade.SpriteList]
         The sprite list for the floor and crate sprites.
     coin_list: Optional[arcade.SpriteList]
-        The sprite list for the coin sprites.#
+        The sprite list for the coin sprites.
+    door_list: Optional[arcade.SpriteList]
+        The sprite list for the door sprites.
     blocker_list: List[arcade.SpriteList]
         A list containing sprite lists for each of the walls blocking progression.
     enemy_list: arcade.SpriteList
@@ -66,6 +69,8 @@ class Game(arcade.View):
         The current question which the user can answer.
     walls_completed: int
         How many walls have been completed.
+    is_touching_door: bool
+        Whether the player is touching the door or not.
     """
 
     def __init__(self) -> None:
@@ -74,6 +79,7 @@ class Game(arcade.View):
         self.player: Optional[Player] = None
         self.wall_list: Optional[arcade.SpriteList] = None
         self.coin_list: Optional[arcade.SpriteList] = None
+        self.door_list: Optional[arcade.SpriteList] = None
         self.blocker_list: List[arcade.SpriteList] = []
         self.enemy_list: arcade.SpriteList = arcade.SpriteList(use_spatial_hash=True)
         self.bullet_list: arcade.SpriteList = arcade.SpriteList(use_spatial_hash=True)
@@ -94,10 +100,18 @@ class Game(arcade.View):
             arcade.color.BLACK,
             20,
         )
+        self.door_text: arcade.Text = arcade.Text(
+            "Press 'E' to finish the level",
+            self.window.width / 2 - 175,
+            self.window.height / 2 - 200,
+            arcade.color.BLACK,
+            20,
+        )
         self.left_pressed: bool = False
         self.right_pressed: bool = False
         self.current_question: Tuple[bool, Optional[arcade.SpriteList]] = (False, None)
         self.walls_completed: int = 0
+        self.is_touching_door: bool = False
 
     def __repr__(self) -> str:
         return f"<Game (Current window={self.window})>"
@@ -122,6 +136,7 @@ class Game(arcade.View):
         tile_map = self.level_data.tilemap
         self.wall_list = tile_map.sprite_lists["Platforms"]
         self.coin_list = tile_map.sprite_lists["Coins"]
+        self.door_list = tile_map.sprite_lists["Door"]
 
         # Create the player object
         player_obj = tile_map.sprite_lists["Player"][0]
@@ -149,11 +164,15 @@ class Game(arcade.View):
             self.enemy_list,
             self.coin_list,
             self.blocker_list,
+            self.door_list,
         )
 
         # Set up the Camera
         self.camera = arcade.Camera(self.window.width, self.window.height)
         self.gui_camera = arcade.Camera(self.window.width, self.window.height)
+
+        # Set up the end screen
+        self.window.views["EndScreen"] = EndScreen()
 
         # Schedule the enemy attack every ENEMY_ATTACK_COOLDOWN seconds
         arcade.schedule(self.schedule_enemy_attack, ENEMY_ATTACK_COOLDOWN)
@@ -172,6 +191,7 @@ class Game(arcade.View):
         assert self.player_text is not None
         assert self.wall_list is not None
         assert self.coin_list is not None
+        assert self.door_list is not None
 
         # Clear the screen
         self.clear()
@@ -184,11 +204,12 @@ class Game(arcade.View):
         self.coin_list.draw()
         self.enemy_list.draw()
         self.bullet_list.draw()
+        self.door_list.draw()
         self.player.draw()
         for blocker in self.blocker_list:
             blocker.draw()
 
-        # Draw the score on the screen
+        # Draw the score and health on the screen
         self.gui_camera.use()
         self.player_text.value = (
             f"Score: {self.player.score}  Health: {self.player.health}"
@@ -198,6 +219,10 @@ class Game(arcade.View):
         # Draw the key hint on the screen for the blocker wall
         if self.current_question[0]:
             self.blocker_text.draw()
+
+        # Draw the key hint on the screen for the door
+        if self.is_touching_door:
+            self.door_text.draw()
 
     def on_update(self, delta_time: float) -> None:
         """
@@ -219,8 +244,8 @@ class Game(arcade.View):
 
         # Check if the player is dead
         if self.player.health <= 0:
-            # END GAME
-            arcade.exit()
+            # End the level
+            self.window.show_view(self.window.views["EndScreen"])
 
         # Update the player's time since last attack
         self.player.time_since_last_attack += delta_time
@@ -281,23 +306,28 @@ class Game(arcade.View):
             self.right_pressed = True
         elif key is arcade.key.SPACE and self.physics_engine.is_on_ground(self.player):
             self.physics_engine.apply_force(self.player, (0, PLAYER_JUMP_FORCE))
-        elif (
-            key is arcade.key.E
-            and self.physics_engine.is_on_ground(self.player)
-            and self.current_question[0]
-        ):
-            # Set right_pressed to False to stop the player moving after the question
-            self.right_pressed = False
+        elif key is arcade.key.E:
+            if (
+                self.physics_engine.is_on_ground(self.player)
+                and self.current_question[0]
+            ):
+                # Set right_pressed to False to stop the player moving after the
+                # question
+                self.right_pressed = False
 
-            # Initialise the question view
-            question_view = Question(self.level_data.questions[self.walls_completed])
-            self.window.views["Question"] = question_view
+                # Initialise the question view
+                question_view = Question(
+                    self.level_data.questions[self.walls_completed]
+                )
+                self.window.views["Question"] = question_view
 
-            # Enable the question UI manager
-            question_view.manager.enable()
+                # Enable the question UI manager
+                question_view.manager.enable()
 
-            # Show the question view
-            self.window.show_view(question_view)
+                # Show the question view
+                self.window.show_view(question_view)
+            elif self.is_touching_door:
+                self.window.show_view(self.window.views["EndScreen"])
 
     def on_key_release(self, key: int, modifiers: int) -> None:
         """
