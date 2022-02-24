@@ -7,12 +7,7 @@ from typing import TYPE_CHECKING, List, Tuple
 import arcade
 
 # Custom
-from constants import (
-    FRICTION,
-    PLAYER_MASS,
-    PLAYER_MAX_HORIZONTAL_SPEED,
-    PLAYER_MAX_VERTICAL_SPEED,
-)
+from constants import FRICTION, MASS
 from entities.player import ScoreAmount
 
 if TYPE_CHECKING:
@@ -193,11 +188,9 @@ class PhysicsEngine(arcade.PymunkPhysicsEngine):
         # Add the player sprite to the physics engine
         self.add_sprite(
             player,
-            mass=PLAYER_MASS,
+            mass=MASS,
             friction=FRICTION,
             moment_of_inertia=self.MOMENT_INF,
-            max_horizontal_velocity=PLAYER_MAX_HORIZONTAL_SPEED,
-            max_vertical_velocity=PLAYER_MAX_VERTICAL_SPEED,
             collision_type="player",
         )
 
@@ -209,6 +202,7 @@ class PhysicsEngine(arcade.PymunkPhysicsEngine):
         # Add the enemy sprites to the physics engine
         self.add_sprite_list(
             enemy_list,
+            mass=MASS,
             friction=FRICTION,
             moment_of_intertia=self.MOMENT_INF,
             collision_type="enemy",

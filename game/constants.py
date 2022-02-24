@@ -7,10 +7,9 @@ BUTTON_STYLE = {
 
 # Sprite sizes
 SPRITE_SCALE = 0.5
+SPRITE_SIZE = 128 * SPRITE_SCALE
 
 # Player constants
-PLAYER_MAX_HORIZONTAL_SPEED = 500
-PLAYER_MAX_VERTICAL_SPEED = 2000
 PLAYER_MOVE_FORCE = 1000
 PLAYER_JUMP_FORCE = 70000
 
@@ -22,8 +21,12 @@ FACING_LEFT = -1
 # Physics constants
 GRAVITY = (0, -2000)
 DAMPING = 0.01  # This has to be set to 0.01 as 0 would make the player not move at all
-FRICTION = 1.0
-PLAYER_MASS = 1.0
+FRICTION = 0.4
+MASS = 1.0
 
 # Bullet constants
 BULLET_VELOCITY = 500
+
+# Enemy constants
+ENEMY_VIEW_DISTANCE = 5
+ENEMY_MOVEMENT_FORCE = 500

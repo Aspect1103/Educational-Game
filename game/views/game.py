@@ -224,11 +224,20 @@ class Game(arcade.View):
             # The player is not moving so increase the friction making the player stop
             self.physics_engine.set_friction(self.player, 1)
 
-        # Update the physics engine
-        self.physics_engine.step()
-
         # Position the camera
         self.center_camera_on_player()
+
+        # Update the enemy's position
+        line_of_sight_list = arcade.SpriteList(use_spatial_hash=True)
+        line_of_sight_list.extend(self.wall_list)
+        for blocker in self.blocker_list:
+            line_of_sight_list.extend(blocker)
+        for enemy in self.enemy_list:
+            force = enemy.calculate_movement(self.player, line_of_sight_list)  # noqa
+            self.physics_engine.apply_force(enemy, force)
+
+        # Update the physics engine
+        self.physics_engine.step()
 
     def on_key_press(self, key: int, modifiers: int) -> None:
         """
@@ -339,7 +348,7 @@ class Game(arcade.View):
 
         # Remove the stored blocker wall
         blocker_wall: arcade.SpriteList = self.current_question[1]
-        blocker_wall.visible = False
+        self.blocker_list.remove(blocker_wall)
         for sprite in blocker_wall:
             self.physics_engine.remove_sprite(sprite)
         self.current_question = (False, None)
