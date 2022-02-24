@@ -71,6 +71,8 @@ class Game(arcade.View):
         How many walls have been completed.
     is_touching_door: bool
         Whether the player is touching the door or not.
+    level_won: bool
+        Whether the player reached the door and won the level or not.
     """
 
     def __init__(self) -> None:
@@ -112,6 +114,7 @@ class Game(arcade.View):
         self.current_question: Tuple[bool, Optional[arcade.SpriteList]] = (False, None)
         self.walls_completed: int = 0
         self.is_touching_door: bool = False
+        self.level_won: bool = False
 
     def __repr__(self) -> str:
         return f"<Game (Current window={self.window})>"
@@ -327,6 +330,10 @@ class Game(arcade.View):
                 # Show the question view
                 self.window.show_view(question_view)
             elif self.is_touching_door:
+                # Set level_won since the player won
+                self.level_won = True
+
+                # Show the end screen
                 self.window.show_view(self.window.views["EndScreen"])
 
     def on_key_release(self, key: int, modifiers: int) -> None:
