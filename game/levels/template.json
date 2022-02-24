@@ -1,0 +1,121 @@
+{
+  "compressionlevel": -1,
+  "height": 15,
+  "infinite": false,
+  "layers": [
+    {
+      "compression": "zlib",
+      "data": "eJxjYBgFo2AUjIJRMApGwUgBAAf4AAE=",
+      "encoding": "base64",
+      "height": 15,
+      "id": 3,
+      "name": "Coins",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 34,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "compression": "zlib",
+      "data": "eJxjYBgFo2AUjIJRMApGwUgBAAf4AAE=",
+      "encoding": "base64",
+      "height": 15,
+      "id": 4,
+      "name": "Enemies",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 34,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "compression": "zlib",
+      "data": "eJxjYBgFo2AUjIJRMApGwUgBAAf4AAE=",
+      "encoding": "base64",
+      "height": 15,
+      "id": 5,
+      "name": "Player",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 34,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "compression": "zlib",
+      "data": "eJxjYRh4wALFAw1G3YEKRt2BCkbdgQpG3YEKRt2BCgabO1gHGLMMIgwAiuYBmQ==",
+      "encoding": "base64",
+      "height": 15,
+      "id": 1,
+      "name": "Platforms",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 34,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "compression": "zlib",
+      "data": "eJxjYBgFo2AUjIJRMApGwUgBAAf4AAE=",
+      "encoding": "base64",
+      "height": 15,
+      "id": 7,
+      "name": "Door",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 34,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "compression": "zlib",
+      "data": "eJxjYKANYKeRuaSCUXegglF3oIJRd6CCUXegglF3oIJRdwwPAACb1wBc",
+      "encoding": "base64",
+      "height": 15,
+      "id": 6,
+      "name": "Walls2",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 34,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "compression": "zlib",
+      "data": "eJxjYCAesJOglpZg1B2oYNQdqGDUHahg1B2oYNQdqGDUHSMPAACrewBc",
+      "encoding": "base64",
+      "height": 15,
+      "id": 2,
+      "name": "Walls1",
+      "opacity": 1,
+      "type": "tilelayer",
+      "visible": true,
+      "width": 34,
+      "x": 0,
+      "y": 0
+    }
+  ],
+  "nextlayerid": 8,
+  "nextobjectid": 1,
+  "orientation": "orthogonal",
+  "renderorder": "right-down",
+  "tiledversion": "1.8.1",
+  "tileheight": 128,
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "source": "tileset.json"
+    }
+  ],
+  "tilewidth": 128,
+  "type": "map",
+  "version": "1.8",
+  "width": 34
+}
