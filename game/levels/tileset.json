@@ -26,7 +26,7 @@
     },
     {
       "id": 2,
-      "image": "../textures/images/enemy.png",
+      "image": "../textures/images/enemy_idle.png",
       "imageheight": 128,
       "imagewidth": 96
     },
@@ -44,7 +44,7 @@
     },
     {
       "id": 5,
-      "image": "../textures/images/player.png",
+      "image": "../textures/images/player_idle.png",
       "imageheight": 128,
       "imagewidth": 96
     },

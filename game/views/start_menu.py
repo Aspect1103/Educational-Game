@@ -74,7 +74,7 @@ class StartMenu(arcade.View):
         vertical_box = arcade.gui.UIBoxLayout()
 
         # Create background
-        self.background: arcade.Texture = non_moving_textures["background"][0]
+        self.background: arcade.Texture = non_moving_textures["background"]
 
         # Set up the level selection view
         level_selection_view = LevelSelection()

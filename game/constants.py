@@ -17,8 +17,10 @@ FRICTION = 0.4
 MASS = 1.0
 
 # Entity constants
-FACING_RIGHT = 1
-FACING_LEFT = -1
+FACING_RIGHT = 0
+FACING_LEFT = 1
+DEAD_ZONE = 0.1  # Needed since the physics engine often flips above and below zero
+DISTANCE_TO_CHANGE_TEXTURE = 20  # How far the entity needs to travel to change texture
 
 # Player constants
 PLAYER_MOVE_FORCE = 1000

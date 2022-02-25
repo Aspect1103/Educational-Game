@@ -88,7 +88,7 @@ class LevelSelection(arcade.View):
         vertical_box = arcade.gui.UIBoxLayout()
 
         # Create background
-        self.background: arcade.Texture = non_moving_textures["background"][0]
+        self.background: arcade.Texture = non_moving_textures["background"]
 
         # Create the first row of levels
         first_horizontal_box = arcade.gui.UIBoxLayout(vertical=False)

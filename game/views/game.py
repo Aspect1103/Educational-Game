@@ -10,8 +10,6 @@ import arcade
 from constants import (
     DAMPING,
     ENEMY_ATTACK_COOLDOWN,
-    FACING_LEFT,
-    FACING_RIGHT,
     GRAVITY,
     PLAYER_ATTACK_COOLDOWN,
     PLAYER_JUMP_FORCE,
@@ -258,21 +256,16 @@ class Game(arcade.View):
 
         # Calculate the speed and direction of the player based on the keys pressed
         if self.left_pressed and not self.right_pressed:
-            self.player.facing = FACING_LEFT
             self.physics_engine.apply_force(self.player, (-PLAYER_MOVE_FORCE, 0))
             # Set the friction to 0 so the player doesn't stop suddenly
             self.physics_engine.set_friction(self.player, 0)
         elif self.right_pressed and not self.left_pressed:
-            self.player.facing = FACING_RIGHT
             self.physics_engine.apply_force(self.player, (PLAYER_MOVE_FORCE, 0))
             # Set the friction to 0 so the player doesn't stop suddenly
             self.physics_engine.set_friction(self.player, 0)
         else:
             # The player is not moving so increase the friction making the player stop
             self.physics_engine.set_friction(self.player, 1)
-
-        # Update the player animation
-        self.player.update_animation()
 
         # Position the camera
         self.center_camera_on_player()
@@ -283,14 +276,8 @@ class Game(arcade.View):
         for blocker in self.blocker_list:
             line_of_sight_list.extend(blocker)
         for enemy in self.enemy_list:
-            force, direction = enemy.calculate_movement(  # noqa
-                self.player, line_of_sight_list
-            )
+            force = enemy.calculate_movement(self.player, line_of_sight_list)  # noqa
             self.physics_engine.apply_force(enemy, force)
-            enemy.facing = direction
-
-        # Update the enemy's animation
-        self.enemy_list.update_animation()
 
         # Update the physics engine
         self.physics_engine.step()

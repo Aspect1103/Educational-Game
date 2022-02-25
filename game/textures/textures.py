@@ -32,19 +32,44 @@ texture_path = pathlib.Path(__file__).resolve().parent.joinpath("images")
 
 # Create a dictionary to hold all the filenames for the non-moving textures
 non_moving_filenames = {
-    "background": ["background.png"],
-    "bullet": ["bullet.png"],
+    "background": "background.png",
 }
 # Create a dictionary to hold all the filenames for the non-moving textures
 moving_filenames = {
-    "player": {"idle": ["player.png"], "walking": ["player.png"]},
-    "enemy": {"idle": ["enemy.png"], "walking": ["enemy.png"]},
+    "player": {
+        "idle": ["player_idle.png"],
+        "jump": ["player_jump.png"],
+        "fall": ["player_fall.png"],
+        "walk": [
+            "player_walk1.png",
+            "player_walk2.png",
+            "player_walk3.png",
+            "player_walk4.png",
+            "player_walk5.png",
+            "player_walk6.png",
+            "player_walk7.png",
+            "player_walk8.png",
+        ],
+    },
+    "enemy": {
+        "idle": ["enemy_idle.png"],
+        "jump": ["enemy_jump.png"],
+        "fall": ["enemy_fall.png"],
+        "walk": [
+            "enemy_walk1.png",
+            "enemy_walk2.png",
+            "enemy_walk3.png",
+            "enemy_walk4.png",
+            "enemy_walk5.png",
+            "enemy_walk6.png",
+            "enemy_walk7.png",
+            "enemy_walk8.png",
+        ],
+    },
 }
 # Create the non-moving textures
-non_moving_textures: Dict[str, List[arcade.Texture]] = {
-    key: [
-        arcade.load_texture(str(texture_path.joinpath(filename))) for filename in value
-    ]
+non_moving_textures: Dict[str, arcade.Texture] = {
+    key: arcade.load_texture(str(texture_path.joinpath(value)))
     for key, value in non_moving_filenames.items()
 }
 
