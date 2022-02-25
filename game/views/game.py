@@ -21,7 +21,7 @@ from entities.enemy import Enemy
 from entities.player import Player
 from levels.levels import levels
 from physics import PhysicsEngine
-from textures.textures import textures
+from textures.textures import moving_textures
 from views.end_screen import EndScreen
 from views.question import Question
 
@@ -144,13 +144,16 @@ class Game(arcade.View):
         # Create the player object
         player_obj = tile_map.sprite_lists["Player"][0]
         self.player = Player(
-            player_obj.center_x, player_obj.center_y, textures["player"][0], 100
+            player_obj.center_x,
+            player_obj.center_y,
+            moving_textures["player"],
+            100,
         )
 
         # Create the enemies
         for enemy in tile_map.sprite_lists["Enemies"]:
             self.enemy_list.append(
-                Enemy(enemy.center_x, enemy.center_y, textures["enemy"][0], 10)
+                Enemy(enemy.center_x, enemy.center_y, moving_textures["enemy"], 10)
             )
 
         # Create the blocker list
@@ -268,6 +271,9 @@ class Game(arcade.View):
             # The player is not moving so increase the friction making the player stop
             self.physics_engine.set_friction(self.player, 1)
 
+        # Update the player animation
+        self.player.update_animation()
+
         # Position the camera
         self.center_camera_on_player()
 
@@ -282,6 +288,9 @@ class Game(arcade.View):
             )
             self.physics_engine.apply_force(enemy, force)
             enemy.facing = direction
+
+        # Update the enemy's animation
+        self.enemy_list.update_animation()
 
         # Update the physics engine
         self.physics_engine.step()

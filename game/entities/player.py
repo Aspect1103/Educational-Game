@@ -2,6 +2,7 @@ from __future__ import annotations
 
 # Builtin
 from enum import Enum
+from typing import Dict, List, Tuple
 
 # Pip
 import arcade
@@ -29,8 +30,8 @@ class Player(Entity):
         The x position of the player.
     y: float
         The y position of the player.
-    texture: arcade.Texture
-        The sprite which represents this player.
+    texture_dict: Dict[str, List[Tuple[arcade.Texture, arcade.Texture]]]
+        The textures which represent this entity.
     health: int
         The health of the entity.
 
@@ -41,9 +42,13 @@ class Player(Entity):
     """
 
     def __init__(
-        self, x: float, y: float, texture: arcade.Texture, health: int
+        self,
+        x: float,
+        y: float,
+        texture_dict: Dict[str, List[Tuple[arcade.Texture, arcade.Texture]]],
+        health: int,
     ) -> None:
-        super().__init__(x, y, texture, health)
+        super().__init__(x, y, texture_dict, health)
         self.score: int = 0
 
     def __repr__(self) -> str:

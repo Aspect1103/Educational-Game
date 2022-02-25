@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 # Builtin
-from typing import TYPE_CHECKING, Tuple
+from typing import TYPE_CHECKING, Dict, List, Tuple
 
 # Pip
 import arcade
@@ -61,13 +61,15 @@ class Entity(arcade.Sprite):
         The x position of the entity.
     y: float
         The y position of the entity.
-    texture: arcade.Texture
-        The sprite which represents this entity.
+    texture_dict: Dict[str, List[Tuple[arcade.Texture, arcade.Texture]]]
+        The textures which represent this entity.
     health: int
         The health of the entity.
 
     Attributes
     ----------
+    texture: arcade.Texture
+        The sprite which represents this entity.
     time_since_last_attack: float
         How long it has been since the last attack.
     facing: int
@@ -75,13 +77,20 @@ class Entity(arcade.Sprite):
     """
 
     def __init__(
-        self, x: float, y: float, texture: arcade.Texture, health: int
+        self,
+        x: float,
+        y: float,
+        texture_dict: Dict[str, List[Tuple[arcade.Texture, arcade.Texture]]],
+        health: int,
     ) -> None:
         super().__init__(scale=SPRITE_SCALE)
         self.center_x: float = x
         self.center_y: float = y
-        self.texture: arcade.Texture = texture
+        self.texture_dict: Dict[
+            str, List[Tuple[arcade.Texture, arcade.Texture]]
+        ] = texture_dict
         self.health: int = health
+        self.texture: arcade.Texture = self.texture_dict["idle"][0][0]
         self.time_since_last_attack: float = 0
         self.facing: int = FACING_RIGHT
 
@@ -114,3 +123,13 @@ class Entity(arcade.Sprite):
     def deal_damage(self) -> None:
         """Deals damage to the entity."""
         self.health -= BULLET_DAMAGE
+
+    def update_animation(self, delta_time: float = 1 / 60) -> None:
+        """
+        Updates the entity's sprite making it animated.
+
+        Parameters
+        ----------
+        delta_time: float
+            Time interval since the last time the function was called.
+        """

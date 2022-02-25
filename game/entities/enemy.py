@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 # Builtin
-from typing import TYPE_CHECKING, Tuple
+from typing import TYPE_CHECKING, Dict, List, Tuple
 
 # Pip
 import arcade
@@ -24,16 +24,20 @@ class Enemy(Entity):
         The x position of the enemy.
     y: float
         The y position of the enemy.
-    texture: arcade.Texture
-        The sprite which represents this enemy.
+    texture_dict: Dict[str, List[Tuple[arcade.Texture, arcade.Texture]]]
+        The textures which represent this entity.
     health: int
         The health of the entity.
     """
 
     def __init__(
-        self, x: float, y: float, texture: arcade.Texture, health: int
+        self,
+        x: float,
+        y: float,
+        texture_dict: Dict[str, List[Tuple[arcade.Texture, arcade.Texture]]],
+        health: int,
     ) -> None:
-        super().__init__(x, y, texture, health)
+        super().__init__(x, y, texture_dict, health)
 
     def __repr__(self) -> str:
         return f"<Enemy (Position=({self.center_x}, {self.center_y}))>"
