@@ -9,7 +9,7 @@ from typing import Dict, List, NamedTuple, Union
 import arcade
 
 # Custom
-from constants import SPRITE_SCALE
+from constants import LEVEL_COUNT, SPRITE_SCALE
 
 
 def load_tilemap(
@@ -62,13 +62,19 @@ layer_options: Dict[str, Dict[str, Union[str, bool]]] = {
 }
 
 # Create the levels
-level_one_path = level_path.joinpath("Level 1")
-levels: Dict[str, GameLevel] = {
-    "1": GameLevel(
-        load_tilemap(level_one_path.joinpath("map.json"), layer_options),
+levels: Dict[int, GameLevel] = {
+    count
+    + 1: GameLevel(
+        load_tilemap(
+            level_path.joinpath(f"Level {count+1}").joinpath("map.json"), layer_options
+        ),
         2,
         json.loads(
-            open(level_one_path.joinpath("questions.json"), encoding="utf8").read()
+            open(
+                level_path.joinpath(f"Level {count+1}").joinpath("questions.json"),
+                encoding="utf8",
+            ).read()
         ),
     )
+    for count in range(LEVEL_COUNT)
 }

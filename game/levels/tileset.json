@@ -14,55 +14,55 @@
   "tiles": [
     {
       "id": 0,
-      "image": "../../textures/images/box.png",
+      "image": "../textures/images/box.png",
       "imageheight": 128,
       "imagewidth": 128
     },
     {
       "id": 1,
-      "image": "../../textures/images/coin.png",
+      "image": "../textures/images/coin.png",
       "imageheight": 128,
       "imagewidth": 128
     },
     {
       "id": 2,
-      "image": "../../textures/images/enemy.png",
+      "image": "../textures/images/enemy.png",
       "imageheight": 128,
       "imagewidth": 96
     },
     {
       "id": 3,
-      "image": "../../textures/images/floor_bottom.png",
+      "image": "../textures/images/floor_bottom.png",
       "imageheight": 128,
       "imagewidth": 128
     },
     {
       "id": 4,
-      "image": "../../textures/images/floor_top.png",
+      "image": "../textures/images/floor_top.png",
       "imageheight": 128,
       "imagewidth": 128
     },
     {
       "id": 5,
-      "image": "../../textures/images/player.png",
+      "image": "../textures/images/player.png",
       "imageheight": 128,
       "imagewidth": 96
     },
     {
       "id": 6,
-      "image": "../../textures/images/wall.png",
+      "image": "../textures/images/wall.png",
       "imageheight": 128,
       "imagewidth": 128
     },
     {
       "id": 7,
-      "image": "../../textures/images/door_mid.png",
+      "image": "../textures/images/door_mid.png",
       "imageheight": 128,
       "imagewidth": 128
     },
     {
       "id": 8,
-      "image": "../../textures/images/door_top.png",
+      "image": "../textures/images/door_top.png",
       "imageheight": 128,
       "imagewidth": 128
     }

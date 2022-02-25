@@ -130,7 +130,7 @@ class Game(arcade.View):
         """
         # Load the tilemap
         try:
-            self.level_data = levels[str(level)]
+            self.level_data = levels[level]
         except KeyError:
             arcade.exit()
             raise KeyError(f"No map available for level {level}")

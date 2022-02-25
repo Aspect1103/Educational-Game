@@ -5,6 +5,9 @@ BUTTON_STYLE = {
     "bg_color": (196, 196, 196),
 }
 
+# Level constants
+LEVEL_COUNT = 10
+
 # Sprite sizes
 SPRITE_SCALE = 0.5
 SPRITE_SIZE = 128 * SPRITE_SCALE
