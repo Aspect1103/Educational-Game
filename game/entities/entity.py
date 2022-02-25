@@ -194,3 +194,4 @@ class Entity(arcade.Sprite):
             self.texture = self.texture_dict["walk"][self.walk_texture_index][
                 self.facing
             ]
+            return
