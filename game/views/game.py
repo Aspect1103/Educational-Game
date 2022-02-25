@@ -14,6 +14,7 @@ from constants import (
     PLAYER_ATTACK_COOLDOWN,
     PLAYER_JUMP_FORCE,
     PLAYER_MOVE_FORCE,
+    SPRITE_SIZE,
 )
 from entities.enemy import Enemy
 from entities.player import Player
@@ -379,16 +380,33 @@ class Game(arcade.View):
         # Make sure variables needed are valid
         assert self.camera is not None
         assert self.player is not None
+        assert self.level_data is not None
 
         # Calculate the screen position centered on the player
         screen_center_x = self.player.center_x - (self.window.width / 2)
         screen_center_y = self.player.center_y - (self.window.height / 2)
 
+        # Calculate upper limits on the camera
+        max_x, max_y = (
+            self.level_data.tilemap.width * SPRITE_SIZE
+            - self.camera.viewport_width
+            + (self.camera.viewport_width / SPRITE_SIZE)
+            - 15,
+            self.level_data.tilemap.height * SPRITE_SIZE
+            - self.camera.viewport_height
+            + (self.camera.viewport_height / SPRITE_SIZE)
+            - 10,
+        )
+
         # Don't let the camera travel past 0
         if screen_center_x < 0:
             screen_center_x = 0
+        elif screen_center_x > max_x:
+            screen_center_x = max_x
         if screen_center_y < 0:
             screen_center_y = 0
+        elif screen_center_y > max_y:
+            screen_center_y = max_y
 
         # Move the camera to the new position
         self.camera.move_to((screen_center_x, screen_center_y))  # noqa
