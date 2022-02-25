@@ -49,10 +49,11 @@ non_moving_textures: Dict[str, List[arcade.Texture]] = {
 }
 
 # Create the moving textures
-moving_textures: Dict[str, Dict[str, List[Tuple[arcade.Texture, arcade.Texture]]]] = {
+moving_textures: Dict[str, Dict[str, List[List[arcade.Texture]]]] = {
     key: {
         animation_type: [
-            load_texture_pair(texture_path.joinpath(filename)) for filename in sublist
+            arcade.load_texture_pair(texture_path.joinpath(filename))
+            for filename in sublist
         ]
         for animation_type, sublist in value.items()
     }

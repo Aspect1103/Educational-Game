@@ -24,7 +24,7 @@ class Enemy(Entity):
         The x position of the enemy.
     y: float
         The y position of the enemy.
-    texture_dict: Dict[str, List[Tuple[arcade.Texture, arcade.Texture]]]
+    texture_dict: Dict[str, List[List[arcade.Texture]]]
         The textures which represent this entity.
     health: int
         The health of the entity.
@@ -34,7 +34,7 @@ class Enemy(Entity):
         self,
         x: float,
         y: float,
-        texture_dict: Dict[str, List[Tuple[arcade.Texture, arcade.Texture]]],
+        texture_dict: Dict[str, List[List[arcade.Texture]]],
         health: int,
     ) -> None:
         super().__init__(x, y, texture_dict, health)

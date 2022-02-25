@@ -61,7 +61,7 @@ class Entity(arcade.Sprite):
         The x position of the entity.
     y: float
         The y position of the entity.
-    texture_dict: Dict[str, List[Tuple[arcade.Texture, arcade.Texture]]]
+    texture_dict: Dict[str, List[List[arcade.Texture, arcade.Texture]]]
         The textures which represent this entity.
     health: int
         The health of the entity.
@@ -80,15 +80,13 @@ class Entity(arcade.Sprite):
         self,
         x: float,
         y: float,
-        texture_dict: Dict[str, List[Tuple[arcade.Texture, arcade.Texture]]],
+        texture_dict: Dict[str, List[List[arcade.Texture]]],
         health: int,
     ) -> None:
         super().__init__(scale=SPRITE_SCALE)
         self.center_x: float = x
         self.center_y: float = y
-        self.texture_dict: Dict[
-            str, List[Tuple[arcade.Texture, arcade.Texture]]
-        ] = texture_dict
+        self.texture_dict: Dict[str, List[List[arcade.Texture]]] = texture_dict
         self.health: int = health
         self.texture: arcade.Texture = self.texture_dict["idle"][0][0]
         self.time_since_last_attack: float = 0
@@ -133,3 +131,6 @@ class Entity(arcade.Sprite):
         delta_time: float
             Time interval since the last time the function was called.
         """
+        # Idle animation
+
+        # Walking animation
