@@ -146,7 +146,7 @@ class Question(arcade.View):
         # Create the answers
         horizontal_box = arcade.gui.UIBoxLayout(vertical=False)
         for answer in self.question["answers"]:
-            input_box = InputButton(text=answer, width=100, style=BUTTON_STYLE)
+            input_box = InputButton(text=answer, width=150, style=BUTTON_STYLE)
             horizontal_box.add(input_box.with_space_around(right=20))
         self.vertical_box.add(horizontal_box.with_space_around(bottom=20))
 
