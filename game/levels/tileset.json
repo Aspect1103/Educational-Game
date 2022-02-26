@@ -14,55 +14,55 @@
   "tiles": [
     {
       "id": 0,
-      "image": "../textures/images/box.png",
+      "image": "../resources/textures/box.png",
       "imageheight": 128,
       "imagewidth": 128
     },
     {
       "id": 1,
-      "image": "../textures/images/coin.png",
+      "image": "../resources/textures/coin.png",
       "imageheight": 128,
       "imagewidth": 128
     },
     {
       "id": 2,
-      "image": "../textures/images/enemy_idle.png",
+      "image": "../resources/textures/enemy_idle.png",
       "imageheight": 128,
       "imagewidth": 96
     },
     {
       "id": 3,
-      "image": "../textures/images/floor_bottom.png",
+      "image": "../resources/textures/floor_bottom.png",
       "imageheight": 128,
       "imagewidth": 128
     },
     {
       "id": 4,
-      "image": "../textures/images/floor_top.png",
+      "image": "../resources/textures/floor_top.png",
       "imageheight": 128,
       "imagewidth": 128
     },
     {
       "id": 5,
-      "image": "../textures/images/player_idle.png",
+      "image": "../resources/textures/player_idle.png",
       "imageheight": 128,
       "imagewidth": 96
     },
     {
       "id": 6,
-      "image": "../textures/images/wall.png",
+      "image": "../resources/textures/wall.png",
       "imageheight": 128,
       "imagewidth": 128
     },
     {
       "id": 7,
-      "image": "../textures/images/door_mid.png",
+      "image": "../resources/textures/door_mid.png",
       "imageheight": 128,
       "imagewidth": 128
     },
     {
       "id": 8,
-      "image": "../textures/images/door_top.png",
+      "image": "../resources/textures/door_top.png",
       "imageheight": 128,
       "imagewidth": 128
     }

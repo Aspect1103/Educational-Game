@@ -20,7 +20,7 @@ from entities.enemy import Enemy
 from entities.player import Player
 from levels.levels import levels
 from physics import PhysicsEngine
-from textures.textures import moving_textures
+from resources.textures import moving_textures
 from views.end_screen import EndScreen
 from views.question import Question
 

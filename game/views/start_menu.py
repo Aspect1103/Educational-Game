@@ -9,7 +9,7 @@ import arcade.gui
 from constants import BUTTON_STYLE
 
 # Custom
-from textures.textures import non_moving_textures
+from resources.textures import non_moving_textures
 from views.level_selection import LevelSelection
 
 if TYPE_CHECKING:
