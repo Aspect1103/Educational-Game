@@ -130,12 +130,8 @@ class Game(arcade.View):
         level: int
             The level to load.
         """
-        # Load the tilemap
-        try:
-            self.level_data = levels[level]
-        except KeyError:
-            arcade.exit()
-            raise KeyError(f"No map available for level {level}")
+        # Load the level data
+        self.level_data = levels[level]
 
         # Load the floor and coin tilemap layer into its own sprite list
         tile_map = self.level_data.tilemap
