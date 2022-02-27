@@ -186,7 +186,9 @@ class Game(arcade.View):
         # Set up each enemy's attack cooldown to be a random value between
         # ENEMY_ATTACK_COOLDOWN_MIN and ENEMY_ATTACK_COOLDOWN_MAX seconds
         for enemy in self.enemy_list:
-            enemy.set_cooldown(  # noqa
+            # Make sure the enemy is valid
+            assert isinstance(enemy, Enemy)
+            enemy.set_cooldown(
                 random.uniform(ENEMY_ATTACK_COOLDOWN_MIN, ENEMY_ATTACK_COOLDOWN_MAX)
             )
 
@@ -252,7 +254,9 @@ class Game(arcade.View):
 
         # Check if the enemies are dead
         for enemy in self.enemy_list:
-            if enemy.health <= 0:  # noqa
+            # Make sure the enemy is valid
+            assert isinstance(enemy, Enemy)
+            if enemy.health <= 0:
                 enemy.remove_from_sprite_lists()
 
         # Check if the player is dead
@@ -284,16 +288,20 @@ class Game(arcade.View):
         line_of_sight_list.extend(self.wall_list)
         for blocker in self.blocker_list:
             line_of_sight_list.extend(blocker)
-        for enemy in self.enemy_list:
-            force = enemy.calculate_movement(self.player, line_of_sight_list)  # noqa
+        for enemy in self.enemy_list.sprite_list:
+            # Make sure the enemy is valid
+            assert isinstance(enemy, Enemy)
+            force = enemy.calculate_movement(self.player, line_of_sight_list)
             self.physics_engine.apply_force(enemy, force)
 
         # Check if each enemy should attack
         for enemy in self.enemy_list:
+            # Make sure the enemy is valid
+            assert isinstance(enemy, Enemy)
             enemy.attack_counter += delta_time
-            if enemy.attack_counter >= enemy.attack_cooldown:  # noqa
+            if enemy.attack_counter >= enemy.attack_cooldown:
                 enemy.attack_counter = 0
-                enemy.ranged_attack(self.bullet_list)  # noqa
+                enemy.ranged_attack(self.bullet_list)
 
         # Update the physics engine
         self.physics_engine.step()
