@@ -57,9 +57,11 @@ class Controls(arcade.View):
 
         # Display the keyboard controls
         controls = arcade.gui.UITextArea(
-            text="""Keyboard controls:\n\nWASD - Movement.\nSpace - Jump\nE - Answer
-question/activate door.\nLeft mouse button - Shoot.""",
-            width=450,
+            text=(
+                "Keyboard controls:\n\nA - Left.\nD - Right.\nSpace - Jump.\nE - Answer"
+                " question/activate door.\nLeft mouse button - Shoot."
+            ),
+            width=500,
             height=250,
             text_color=arcade.color.BLACK,
             font_size=24,
