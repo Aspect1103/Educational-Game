@@ -10,6 +10,7 @@ from constants import BUTTON_STYLE
 
 # Custom
 from resources.textures import non_moving_textures
+from views.controls import Controls
 from views.level_selection import LevelSelection
 
 if TYPE_CHECKING:
@@ -40,6 +41,32 @@ class StartButton(arcade.gui.UIFlatButton):
 
         # Enable the level selection UI manager
         level_selection.manager.enable()
+
+
+class ControlsButton(arcade.gui.UIFlatButton):
+    """A button which will display the keyboard controls view when clicked."""
+
+    def __repr__(self) -> str:
+        return (
+            f"<ControlsButton (Position=({self.center_x}, {self.center_y}))"
+            f" (Width={self.width}) (Height={self.height})>"
+        )
+
+    def on_click(self, _) -> None:
+        """Called when the button is clicked."""
+        # Get the current window and view
+        window: Window = arcade.get_window()
+        current_view: StartMenu = window.current_view  # noqa
+
+        # Deactivate the UI manager so the buttons can't be clicked
+        current_view.manager.disable()
+
+        # Show the controls view
+        controls: Controls = window.views["Controls"]  # noqa
+        window.show_view(controls)
+
+        # Enable the controls UI manager
+        controls.manager.enable()
 
 
 class QuitButton(arcade.gui.UIFlatButton):
@@ -80,9 +107,17 @@ class StartMenu(arcade.View):
         level_selection_view = LevelSelection()
         self.window.views["LevelSelection"] = level_selection_view
 
+        # Set up the controls view
+        controls = Controls()
+        self.window.views["Controls"] = controls
+
         # Create the start button
         start_button = StartButton(text="Start Game", width=205, style=BUTTON_STYLE)
         vertical_box.add(start_button.with_space_around(bottom=20))
+
+        # Create the controls button
+        controls_button = ControlsButton(text="Controls", width=205, style=BUTTON_STYLE)
+        vertical_box.add(controls_button.with_space_around(bottom=20))
 
         # Create the quit button
         quit_button = QuitButton(text="Quit", width=205, style=BUTTON_STYLE)
