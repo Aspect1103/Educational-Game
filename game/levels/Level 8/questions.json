@@ -1,24 +1,24 @@
 [
   {
     "answers": [
-      "",
-      "",
-      "",
-      ""
+      "5/8",
+      "6/8",
+      "6/7",
+      "5/7"
     ],
-    "correct": "",
-    "explanation": "",
-    "question": ""
+    "correct": "5/8",
+    "explanation": "You can substitute x=5 into the equation 5/(5+3) then simplify the result.",
+    "question": "Calculate A=5/(x+3) when x=5."
   },
   {
     "answers": [
-      "",
-      "",
-      "",
-      ""
+      "3x+4",
+      "3x+15",
+      "6x+15",
+      "6x+4"
     ],
-    "correct": "",
-    "explanation": "",
-    "question": ""
+    "correct": "3x+15",
+    "explanation": "You can multiply out 6(x+4)-3(x+3) to 6x+24-3x-9 then simplify the result.",
+    "question": "Expand and simplify 6(x+4)-3(x+3)."
   }
 ]

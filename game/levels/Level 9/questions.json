@@ -1,24 +1,24 @@
 [
   {
     "answers": [
-      "",
-      "",
-      "",
-      ""
+      "12/x",
+      "4/x",
+      "4/x^2",
+      "12/x^2"
     ],
-    "correct": "",
-    "explanation": "",
-    "question": ""
+    "correct": "4/x",
+    "explanation": "Both the numerator and denominator can be divided by 3x giving 12x/3x=4 and 3x^2/3x=x.",
+    "question": "Simplify the expression 12x/3x^2."
   },
   {
     "answers": [
-      "",
-      "",
-      "",
-      ""
+      "1",
+      "0",
+      "-1",
+      "2"
     ],
-    "correct": "",
-    "explanation": "",
-    "question": ""
+    "correct": "1",
+    "explanation": "-3 can be substituted into A=(2+x)/(5+2x) giving A=(2+(-3))/(5+2(-3)).",
+    "question": "Calculate A=(2+x)/(5+2x) when x=-3."
   }
 ]

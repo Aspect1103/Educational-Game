@@ -1,24 +1,24 @@
 [
   {
     "answers": [
-      "",
-      "",
-      "",
-      ""
+      "4k^3-2k^2+2",
+      "7k^3-2k^2+5",
+      "7k^3-k^2+2",
+      "4k^3-k^2+5"
     ],
-    "correct": "",
-    "explanation": "",
-    "question": ""
+    "correct": "7k^3-k^2+2",
+    "explanation": "You can collect like terms such as 3k^3 and 4k^3 together and simplify the expression.",
+    "question": "Simplify 3k^3+5-2k^2+4k^3-3+k^2 fully."
   },
   {
     "answers": [
-      "",
-      "",
-      "",
-      ""
+      "4/3",
+      "4/5",
+      "2/3",
+      "2/5"
     ],
-    "correct": "",
-    "explanation": "",
-    "question": ""
+    "correct": "2/3",
+    "explanation": "You can move the -x to the right side then isolate the x variable and simplify the result.",
+    "question": "Solve the equation 4-x=5x."
   }
 ]
