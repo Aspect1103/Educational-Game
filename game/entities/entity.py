@@ -39,6 +39,8 @@ class Bullet(arcade.SpriteSolidColor):
         The color of the bullet.
     direction: int
         The direction of the bullet. 1 is right and -1 is left.
+    owner: Entity
+        The entity which shot the bullet.
     """
 
     def __init__(
@@ -49,11 +51,13 @@ class Bullet(arcade.SpriteSolidColor):
         height: int,
         color: Tuple[int, int, int],
         direction: int,
+        owner: Entity,
     ) -> None:
         super().__init__(width=width, height=height, color=color)
         self.center_x: float = x
         self.center_y: float = y
         self.direction: int = direction
+        self.owner: Entity = owner
 
     def __repr__(self) -> str:
         return f"<Bullet (Position=({self.center_x}, {self.center_y}))>"
@@ -127,7 +131,7 @@ class Entity(arcade.Sprite):
             center_x -= 48
             direction = -1
         new_bullet = Bullet(
-            center_x, self.center_y, 50, 10, arcade.color.RED, self.facing
+            center_x, self.center_y, 50, 10, arcade.color.RED, self.facing, self
         )
         physics: PhysicsEngine = self.physics_engines[0]
         physics.add_bullet(new_bullet)

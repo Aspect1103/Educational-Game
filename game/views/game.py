@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import random
+
 # Builtin
 from typing import TYPE_CHECKING, List, Optional, Tuple
 
@@ -9,7 +11,8 @@ import arcade
 # Custom
 from constants import (
     DAMPING,
-    ENEMY_ATTACK_COOLDOWN,
+    ENEMY_ATTACK_COOLDOWN_MAX,
+    ENEMY_ATTACK_COOLDOWN_MIN,
     GRAVITY,
     PLAYER_ATTACK_COOLDOWN,
     PLAYER_JUMP_FORCE,
@@ -152,11 +155,16 @@ class Game(arcade.View):
         # Create the enemies
         for enemy in tile_map.sprite_lists["Enemies"]:
             self.enemy_list.append(
-                Enemy(enemy.center_x, enemy.center_y, moving_textures["enemy"], 10)
+                Enemy(
+                    enemy.center_x,
+                    enemy.center_y,
+                    moving_textures["enemy"],
+                    10,
+                )
             )
 
-        # Create the blocker list
-        for blocker_count in range(self.level_data.blocker_count):
+        # Create the blocker list (only 2 walls per level)
+        for blocker_count in range(2):
             blocker = tile_map.sprite_lists[f"Walls{blocker_count+1}"]
             blocker.enable_spatial_hashing()
             self.blocker_list.append(blocker)
@@ -179,8 +187,12 @@ class Game(arcade.View):
         # Set up the end screen
         self.window.views["EndScreen"] = EndScreen()
 
-        # Schedule the enemy attack every ENEMY_ATTACK_COOLDOWN seconds
-        arcade.schedule(self.schedule_enemy_attack, ENEMY_ATTACK_COOLDOWN)
+        # Set up each enemy's attack cooldown to be a random value between
+        # ENEMY_ATTACK_COOLDOWN_MIN and ENEMY_ATTACK_COOLDOWN_MAX seconds
+        for enemy in self.enemy_list:
+            enemy.set_cooldown(  # noqa
+                random.uniform(ENEMY_ATTACK_COOLDOWN_MIN, ENEMY_ATTACK_COOLDOWN_MAX)
+            )
 
     def on_show(self) -> None:
         """Run setup logic when the view loads."""
@@ -279,6 +291,13 @@ class Game(arcade.View):
         for enemy in self.enemy_list:
             force = enemy.calculate_movement(self.player, line_of_sight_list)  # noqa
             self.physics_engine.apply_force(enemy, force)
+
+        # Check if each enemy should attack
+        for enemy in self.enemy_list:
+            enemy.attack_counter += delta_time
+            if enemy.attack_counter >= enemy.attack_cooldown:  # noqa
+                enemy.attack_counter = 0
+                enemy.ranged_attack(self.bullet_list)  # noqa
 
         # Update the physics engine
         self.physics_engine.step()
@@ -423,8 +442,3 @@ class Game(arcade.View):
             self.physics_engine.remove_sprite(sprite)
         self.current_question = (False, None)
         self.walls_completed += 1
-
-    def schedule_enemy_attack(self, _) -> None:
-        """Makes an enemy attack every ENEMY_ATTACK_COOLDOWN second(s)."""
-        for enemy in self.enemy_list:
-            enemy.ranged_attack(self.bullet_list)  # noqa

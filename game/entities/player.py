@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 # Builtin
-from enum import Enum
+from enum import IntEnum
 from typing import Dict, List
 
 # Pip
@@ -11,13 +11,13 @@ import arcade
 from entities.entity import Entity
 
 
-class ScoreAmount(Enum):
+class ScoreAmount(IntEnum):
     """Stores the amount of points each action will give the player."""
 
-    COIN: int = 1
-    ENEMY: int = 5
-    QUESTION_CORRECT: int = 10
-    QUESTION_WRONG: int = -5
+    COIN = 1
+    ENEMY = 5
+    QUESTION_CORRECT = 10
+    QUESTION_WRONG = -5
 
 
 class Player(Entity):
@@ -31,9 +31,9 @@ class Player(Entity):
     y: float
         The y position of the player.
     texture_dict: Dict[str, List[List[arcade.Texture]]]
-        The textures which represent this entity.
+        The textures which represent this player
     health: int
-        The health of the entity.
+        The health of the player
 
     Attributes
     ----------
@@ -63,4 +63,6 @@ class Player(Entity):
         amount: ScoreAmount
             The amount of points to give to the player.
         """
+        print(amount)
+        print(amount.value)
         self.score += amount.value

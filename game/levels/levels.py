@@ -34,14 +34,11 @@ class GameLevel(NamedTuple):
 
     tilemap: arcade.TileMap
         The loaded tilemap for the level.
-    blocker_count: int
-        The amount of blocker walls the level contains.
     questions: List[Dict[str, Union[List[str], str]]]
         A list of questions with their correct answer and an explanation.
     """
 
     tilemap: arcade.TileMap
-    blocker_count: int
     questions: List[Dict[str, Union[List[str], str]]]
 
 
@@ -68,7 +65,6 @@ levels: Dict[int, GameLevel] = {
         load_tilemap(
             level_path.joinpath(f"Level {count+1}").joinpath("map.json"), layer_options
         ),
-        2,
         json.loads(
             open(
                 level_path.joinpath(f"Level {count+1}").joinpath("questions.json"),

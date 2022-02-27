@@ -25,9 +25,16 @@ class Enemy(Entity):
     y: float
         The y position of the enemy.
     texture_dict: Dict[str, List[List[arcade.Texture]]]
-        The textures which represent this entity.
+        The textures which represent this enemy.
     health: int
-        The health of the entity.
+        The health of the enemy
+
+    Attributes
+    ----------
+    attack_cooldown: float
+        The length of time an enemy has to wait before it can attack again.
+    attack_counter: float
+        The counter which will check if an enemy's cooldown has passed.
     """
 
     def __init__(
@@ -38,6 +45,8 @@ class Enemy(Entity):
         health: int,
     ) -> None:
         super().__init__(x, y, texture_dict, health)
+        self.attack_cooldown: float = 0
+        self.attack_counter: float = 0
 
     def __repr__(self) -> str:
         return f"<Enemy (Position=({self.center_x}, {self.center_y}))>"
@@ -77,3 +86,14 @@ class Enemy(Entity):
             return direction * ENEMY_MOVEMENT_FORCE, 0
         # Enemy does not have line of sight and is not within range
         return 0, 0
+
+    def set_cooldown(self, cooldown: float) -> None:
+        """
+        Sets the enemy's attack cooldown.
+
+        Parameters
+        ----------
+        cooldown: float
+            The enemy's attack cooldown.
+        """
+        self.attack_cooldown = cooldown

@@ -8,10 +8,10 @@ import arcade
 
 # Custom
 from constants import FRICTION, MASS
+from entities.enemy import Enemy
 from entities.player import ScoreAmount
 
 if TYPE_CHECKING:
-    from entities.enemy import Enemy
     from entities.entity import Bullet
     from entities.player import Player
     from views.game import Game
@@ -32,7 +32,7 @@ def player_coin_pickup_handler(player: Player, coin: arcade.Sprite, *_) -> bool:
     """
     # Delete the coin and update the player's score
     coin.remove_from_sprite_lists()
-    player.update_score(ScoreAmount.COIN)  # noqa
+    player.update_score(ScoreAmount.COIN)
     # Return False so pymunk will ignore processing the collision since we just want to
     # increase the score and remove the coin
     return False
@@ -123,10 +123,12 @@ def enemy_bullet_begin_handler(enemy: Enemy, bullet: Bullet, *_) -> bool:
     bullet: Bullet
         The bullet sprite which hit the enemy.
     """
-    # Deal damage to the enemy
-    enemy.deal_damage()
-    # Remove the bullet
-    bullet.remove_from_sprite_lists()
+    # Check if the owner is not an enemy
+    if not isinstance(bullet.owner, Enemy):
+        # Deal damage to the enemy
+        enemy.deal_damage()
+        # Remove the bullet
+        bullet.remove_from_sprite_lists()
     # Return False so pymunk will ignore processing the collision since we just want to
     # decrease the enemy's health and remove the bullet
     return False

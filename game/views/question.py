@@ -47,7 +47,7 @@ class InputButton(arcade.gui.UIFlatButton):
             )
 
             # Add points to the user
-            game_view.player.update_score(ScoreAmount.QUESTION_CORRECT)  # noqa
+            game_view.player.update_score(ScoreAmount.QUESTION_CORRECT)
         else:
             # Display the correct answer
             current_view.question_text.text = (
@@ -57,7 +57,7 @@ class InputButton(arcade.gui.UIFlatButton):
             )
 
             # Remove points from the user
-            game_view.player.update_score(ScoreAmount.QUESTION_WRONG)  # noqa
+            game_view.player.update_score(ScoreAmount.QUESTION_WRONG)
 
         # Reveal the exit button
         current_view.vertical_box.add(
