@@ -63,6 +63,4 @@ class Player(Entity):
         amount: ScoreAmount
             The amount of points to give to the player.
         """
-        print(amount)
-        print(amount.value)
         self.score += amount.value

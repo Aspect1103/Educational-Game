@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Dict
 import arcade.gui
 
 # Custom
-from constants import BUTTON_STYLE
+from constants import BLOCKER_WALL_HEALTH_LOSS, BUTTON_STYLE
 from entities.player import ScoreAmount
 
 if TYPE_CHECKING:
@@ -58,6 +58,9 @@ class InputButton(arcade.gui.UIFlatButton):
 
             # Remove points from the user
             game_view.player.update_score(ScoreAmount.QUESTION_WRONG)
+
+            # Remove health from the user
+            game_view.player.health -= BLOCKER_WALL_HEALTH_LOSS
 
         # Reveal the exit button
         current_view.vertical_box.add(
