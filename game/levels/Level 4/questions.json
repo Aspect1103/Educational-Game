@@ -1,24 +1,24 @@
 [
   {
     "answers": [
-      "",
-      "",
-      "",
-      ""
+      "a*b\u00f7c",
+      "ab/c",
+      "ac/b",
+      "bc/a"
     ],
-    "correct": "",
-    "explanation": "",
-    "question": ""
+    "correct": "ab/c",
+    "explanation": "When multiplying two variables, the expression could be rearranged as ab and when dividing two variables, the expression could be rearranged as a/b.",
+    "question": "Rearrange the expression 'a*b\u00f7c' so that no operators are used."
   },
   {
     "answers": [
-      "",
-      "",
-      "",
-      ""
+      "x=1, y=2",
+      "x=2, y=2",
+      "x=1, y=1",
+      "x=3, y=1"
     ],
-    "correct": "",
-    "explanation": "",
-    "question": ""
+    "correct": "x=1, y=2",
+    "explanation": "You can substitute y=2x into 3x+y=5 like 3x+2x=5 then solve for x and substitute again to find y.",
+    "question": "Use the substitution method to solve these simultaneous equations: y=2x, 3x+y=5."
   }
 ]

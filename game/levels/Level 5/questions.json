@@ -1,24 +1,24 @@
 [
   {
     "answers": [
-      "",
-      "",
-      "",
-      ""
+      "7x^2-1",
+      "7x^2+7",
+      "3x^2-1",
+      "3x^2+7"
     ],
-    "correct": "",
-    "explanation": "",
-    "question": ""
+    "correct": "3x^2-1",
+    "explanation": "You should collect similar terms so 5x^2 and -2x^2 both have an x^2 so can be merged together.",
+    "question": "Simplify 5x^2+3-2x^2-4."
   },
   {
     "answers": [
-      "",
-      "",
-      "",
-      ""
+      "2x+5",
+      "x^2+5x",
+      "x^2+6",
+      "x^2+5x+6"
     ],
-    "correct": "",
-    "explanation": "",
-    "question": ""
+    "correct": "x^2+5x+6",
+    "explanation": "You can use the moon method to expand this expression. First, multiply x and x then x and 3 then 2 and x then finally 2 and 3 and simplify.",
+    "question": "Expand (x+2)(x+3)."
   }
 ]

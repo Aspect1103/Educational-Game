@@ -1,24 +1,24 @@
 [
   {
     "answers": [
-      "x=1, y=2",
-      "x=2, y=2",
-      "x=1, y=1",
-      "x=3, y=1"
+      "\u00a3124",
+      "\u00a358",
+      "\u00a365",
+      "\u00a350"
     ],
-    "correct": "x=1, y=2",
-    "explanation": "You can substitute y=2x into 3x+y=5 like 3x+2x=5 then solve for x and substitute again to find y.",
-    "question": "Use the substitution method to solve these simultaneous equations: y=2x, 3x+y=5."
+    "correct": "\u00a358",
+    "explanation": "There are 12 lines at \u00a34 each so 12*\u00a34=\u00a348 then add \u00a310 for the extra cost.",
+    "question": "Advertisements cost \u00a34 per line plus \u00a310. Find the cost for an advertisement with 12 lines."
   },
   {
     "answers": [
-      "4, 5, ...",
-      "5, 6, ...",
-      "4, 3, ...",
-      "3, 2, ..."
+      "6x+12",
+      "4x+12",
+      "6x+8",
+      "4x+8"
     ],
-    "correct": "5, 6, ...",
-    "explanation": "'>' means greater than so you should choose all the values that are greater than 4.",
-    "question": "Given that x is a whole number, what are the possible values of x if x > 4?"
+    "correct": "6x+12",
+    "explanation": "Multiply each term in the brackets with the one on the outside so (3*2x)+(3*4) then simplify.",
+    "question": "Multiply out the brackets 3(2x+4)."
   }
 ]

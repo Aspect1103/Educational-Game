@@ -12,13 +12,13 @@
   },
   {
     "answers": [
-      "a*b\u00f7c",
-      "ab/c",
-      "ac/b",
-      "bc/a"
+      "19.3",
+      "18.7",
+      "18.3",
+      "19.7"
     ],
-    "correct": "ab/c",
-    "explanation": "When multiplying two variables, the expression could be rearranged as ab and when dividing two variables, the expression could be rearranged as a/b.",
-    "question": "Rearrange the expression 'a*b\u00f7c' so that no operators are used."
+    "correct": "18.3",
+    "explanation": "You can substitute C=21.7 into R=40-C giving R=40-21.7 and then simplify it.",
+    "question": "Calculate R=40-C where C=21.7."
   }
 ]
