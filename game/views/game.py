@@ -20,14 +20,14 @@ from constants import (
 )
 from entities.enemy import Enemy
 from entities.player import Player
-from levels.levels import levels
 from physics import PhysicsEngine
+from resources.levels import levels
 from resources.textures import moving_textures
 from views.end_screen import EndScreen
 from views.question import Question
 
 if TYPE_CHECKING:
-    from levels.levels import GameLevel
+    from resources.levels import GameLevel
 
 
 class Game(arcade.View):

@@ -7,3 +7,8 @@ venv/
 
 # Mypy cache
 .mypy_cache/
+
+# Pyinstaller files
+build/
+dist/
+window.spec
