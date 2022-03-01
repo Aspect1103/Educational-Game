@@ -20,6 +20,7 @@ PyInstaller.__main__.run(
         "game/window.py",
         "--noconsole",
         "--clean",
+        "--noconfirm",
         f"--add-data={resources_path};{resources_folder_name}",
     ]
 )
