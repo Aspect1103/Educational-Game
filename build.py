@@ -15,15 +15,11 @@ resources_path = (
     .joinpath(resources_folder_name)
 )
 
-# Get path to the output folder
-output_path = pathlib.Path(__file__).resolve().parent.joinpath("dist")
-
 PyInstaller.__main__.run(
     [
         "game/window.py",
+        "--noconsole",
         "--clean",
         f"--add-data={resources_path};{resources_folder_name}",
-        f"--distpath={output_path}",
-        "-y",
     ]
 )
