@@ -12,6 +12,7 @@ from constants import BUTTON_STYLE
 
 if TYPE_CHECKING:
     from views.game import Game
+    from window import Window
 
 
 class QuitButton(arcade.gui.UIFlatButton):
@@ -113,7 +114,7 @@ class EndScreen(arcade.View):
         self.manager.draw()
 
     def on_show(self) -> None:
-        """Run setup logic when the view loads."""
+        """Called when the view loads."""
         # Get the game view
         game: Game = self.window.views["Game"]
 
@@ -128,6 +129,13 @@ class EndScreen(arcade.View):
         self.time_to_complete.text = (
             f"Time to complete: {int(total / 60)} minutes and {int(total % 60)} seconds"
         )
+
+        # Play the end screen music
+        window: Window = self.window
+        if window.current_sound is not None:
+            window.current_sound.stop(window.player)
+        window.current_sound = window.sounds["end screen"]
+        window.player = window.current_sound.play(loop=True)
 
         # Enable the UI manager
         self.manager.enable()

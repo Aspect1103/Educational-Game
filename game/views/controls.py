@@ -6,6 +6,8 @@ from typing import TYPE_CHECKING
 # Pip
 import arcade
 import arcade.gui
+
+# Custom
 from constants import BUTTON_STYLE
 
 if TYPE_CHECKING:

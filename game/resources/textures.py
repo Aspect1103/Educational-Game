@@ -2,30 +2,10 @@ from __future__ import annotations
 
 # Builtin
 import pathlib
-from typing import Dict, List, Tuple
+from typing import Dict, List
 
 # Pip
 import arcade
-
-
-def load_texture_pair(filename: pathlib.Path) -> Tuple[arcade.Texture, arcade.Texture]:
-    """
-    Loads a texture pair, with the second being a mirror image.
-
-    Parameters
-    ----------
-    filename: pathlib.Path
-        The texture path
-
-    Returns
-    -------
-    Tuple[arcade.Texture, arcade.Texture]
-        The texture pair.
-    """
-    return arcade.load_texture(filename), arcade.load_texture(
-        filename, flipped_horizontally=True
-    )
-
 
 # Create the texture path
 texture_path = pathlib.Path(__file__).resolve().parent.joinpath("textures")

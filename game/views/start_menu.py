@@ -6,9 +6,9 @@ from typing import TYPE_CHECKING
 # Pip
 import arcade
 import arcade.gui
-from constants import BUTTON_STYLE
 
 # Custom
+from constants import BUTTON_STYLE
 from resources.textures import non_moving_textures
 from views.controls import Controls
 from views.level_selection import LevelSelection

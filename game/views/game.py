@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-import random
-
 # Builtin
+import random
 from typing import TYPE_CHECKING, List, Optional, Tuple
 
 # Pip
@@ -75,6 +74,10 @@ class Game(arcade.View):
         Whether the player is touching the door or not.
     level_won: bool
         Whether the player reached the door and won the level or not.
+    music: arcade.Sound
+        The music that will play while the view is showing.
+    player: Optional[Player]
+        The pyglet music player which plays the music.
     """
 
     def __init__(self) -> None:
@@ -193,7 +196,7 @@ class Game(arcade.View):
             )
 
     def on_show(self) -> None:
-        """Run setup logic when the view loads."""
+        """Called when the view loads."""
         # Set the background color
         arcade.set_background_color(arcade.color.BABY_BLUE)
 

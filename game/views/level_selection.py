@@ -120,6 +120,15 @@ class LevelSelection(arcade.View):
     def __repr__(self) -> str:
         return f"<LevelSelection (Current window={self.window})>"
 
+    def on_hide_view(self) -> None:
+        """Called when the view is hidden."""
+        # Play the game music
+        window: Window = self.window
+        if window.current_sound is not None:
+            window.current_sound.stop(window.player)
+        window.current_sound = window.sounds["game"]
+        window.player = window.current_sound.play(loop=True)
+
     def on_draw(self) -> None:
         """Render the screen."""
         # Clear the screen
