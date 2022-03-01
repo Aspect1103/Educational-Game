@@ -421,7 +421,7 @@ class Game(arcade.View):
             self.level_data.tilemap.height * SPRITE_SIZE
             - self.camera.viewport_height
             + (self.camera.viewport_height / SPRITE_SIZE)
-            - 10,
+            - 15,
         )
 
         # Don't let the camera travel past 0
