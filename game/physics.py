@@ -128,7 +128,11 @@ def enemy_bullet_begin_handler(enemy: Enemy, bullet: Bullet, *_) -> bool:
         # Deal damage to the enemy
         enemy.deal_damage()
         # Remove the bullet
-        bullet.remove_from_sprite_lists()
+        try:
+            bullet.remove_from_sprite_lists()
+        except AttributeError:
+            # An error randomly occurs when the player is moving fast enough
+            pass
     # Return False so pymunk will ignore processing the collision since we just want to
     # decrease the enemy's health and remove the bullet
     return False
