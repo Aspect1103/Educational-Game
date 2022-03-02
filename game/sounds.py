@@ -9,7 +9,9 @@ from typing import Dict
 import arcade
 
 # Create the sound path
-sound_path = pathlib.Path(__file__).resolve().parent.joinpath("sounds")
+sound_path = (
+    pathlib.Path(__file__).resolve().parent.joinpath("resources").joinpath("sounds")
+)
 
 # Create a dictionary to hold all the filenames for the sounds
 sound_filenames = {

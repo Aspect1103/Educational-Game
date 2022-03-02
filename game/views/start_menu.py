@@ -9,9 +9,10 @@ import arcade.gui
 
 # Custom
 from constants import BUTTON_STYLE
-from resources.textures import non_moving_textures
+from textures import non_moving_textures
 from views.controls import Controls
 from views.level_selection import LevelSelection
+from views.scores import Scores
 
 if TYPE_CHECKING:
     from window import Window
@@ -69,6 +70,32 @@ class ControlsButton(arcade.gui.UIFlatButton):
         controls.manager.enable()
 
 
+class ScoresButton(arcade.gui.UIFlatButton):
+    """A button which will display the top scores for each level when clicked."""
+
+    def __repr__(self) -> str:
+        return (
+            f"<ScoresButton (Position=({self.center_x}, {self.center_y}))"
+            f" (Width={self.width}) (Height={self.height})>"
+        )
+
+    def on_click(self, _) -> None:
+        """Called when the button is clicked."""
+        # Get the current window and view
+        window: Window = arcade.get_window()
+        current_view: StartMenu = window.current_view  # noqa
+
+        # Deactivate the UI manager so the buttons can't be clicked
+        current_view.manager.disable()
+
+        # Show the scores view
+        scores: Scores = window.views["Scores"]  # noqa
+        window.show_view(scores)
+
+        # Enable the controls UI manager
+        scores.manager.enable()
+
+
 class QuitButton(arcade.gui.UIFlatButton):
     """A button which when clicked will quit the game."""
 
@@ -111,6 +138,10 @@ class StartMenu(arcade.View):
         controls = Controls()
         self.window.views["Controls"] = controls
 
+        # Set up the scores view
+        scores = Scores()
+        self.window.views["Scores"] = scores
+
         # Create the start button
         start_button = StartButton(text="Start Game", width=205, style=BUTTON_STYLE)
         vertical_box.add(start_button.with_space_around(bottom=20))
@@ -119,9 +150,13 @@ class StartMenu(arcade.View):
         controls_button = ControlsButton(text="Controls", width=205, style=BUTTON_STYLE)
         vertical_box.add(controls_button.with_space_around(bottom=20))
 
+        # Create the scores button
+        scores_button = ScoresButton(text="Scores", width=205, style=BUTTON_STYLE)
+        vertical_box.add(scores_button.with_space_around(bottom=20))
+
         # Create the quit button
         quit_button = QuitButton(text="Quit", width=205, style=BUTTON_STYLE)
-        vertical_box.add(quit_button.with_space_around(bottom=20))
+        vertical_box.add(quit_button)
 
         # Register the UI elements
         self.manager.add(

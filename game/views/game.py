@@ -20,14 +20,14 @@ from constants import (
 )
 from entities.enemy import Enemy
 from entities.player import Player
+from levels import levels
 from physics import PhysicsEngine
-from resources.levels import levels
-from resources.textures import moving_textures
+from textures import moving_textures
 from views.end_screen import EndScreen
 from views.question import Question
 
 if TYPE_CHECKING:
-    from resources.levels import GameLevel
+    from levels import GameLevel
 
 
 class Game(arcade.View):
@@ -36,6 +36,8 @@ class Game(arcade.View):
 
     Attributes
     ----------
+    level_id: int
+        The level number.
     level_data: Optional[GameLevel]
         The LevelInstance namedtuple which holds the data for this level.
     player: Optional[Player]
@@ -74,14 +76,11 @@ class Game(arcade.View):
         Whether the player is touching the door or not.
     level_won: bool
         Whether the player reached the door and won the level or not.
-    music: arcade.Sound
-        The music that will play while the view is showing.
-    player: Optional[Player]
-        The pyglet music player which plays the music.
     """
 
     def __init__(self) -> None:
         super().__init__()
+        self.level_id: int = -1
         self.level_data: Optional[GameLevel] = None
         self.player: Optional[Player] = None
         self.wall_list: Optional[arcade.SpriteList] = None
@@ -134,6 +133,7 @@ class Game(arcade.View):
             The level to load.
         """
         # Load the level data
+        self.level_id = level
         self.level_data = levels[level]
 
         # Load the floor and coin tilemap layer into its own sprite list

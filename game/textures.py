@@ -8,7 +8,9 @@ from typing import Dict, List
 import arcade
 
 # Create the texture path
-texture_path = pathlib.Path(__file__).resolve().parent.joinpath("textures")
+texture_path = (
+    pathlib.Path(__file__).resolve().parent.joinpath("resources").joinpath("textures")
+)
 
 # Create a dictionary to hold all the filenames for the non-moving textures
 non_moving_filenames = {

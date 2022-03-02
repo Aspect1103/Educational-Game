@@ -11,6 +11,7 @@ import arcade.gui
 from constants import BUTTON_STYLE
 
 if TYPE_CHECKING:
+    from database import Database
     from views.game import Game
     from window import Window
 
@@ -126,9 +127,11 @@ class EndScreen(arcade.View):
 
         # Update the time to complete text
         total = time.time() - self.start_time
-        self.time_to_complete.text = (
-            f"Time to complete: {int(total / 60)} minutes and {int(total % 60)} seconds"
-        )
+        self.time_to_complete.text = self.window.seconds_to_string(total)
+
+        # Commit the score and time to complete
+        database: Database = self.window.database
+        database.commit_score(game.player.score, total, game.level_won, game.level_id)
 
         # Play the end screen music
         window: Window = self.window

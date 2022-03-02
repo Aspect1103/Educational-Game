@@ -43,7 +43,9 @@ class GameLevel(NamedTuple):
 
 
 # Create the level path
-level_path = pathlib.Path(__file__).resolve().parent.joinpath("levels")
+level_path = (
+    pathlib.Path(__file__).resolve().parent.joinpath("resources").joinpath("levels")
+)
 
 # Create a dictionary to hold all the options for each layer
 layer_options: Dict[str, Dict[str, Union[str, bool]]] = {

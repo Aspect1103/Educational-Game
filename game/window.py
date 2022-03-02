@@ -7,7 +7,8 @@ from typing import TYPE_CHECKING, Dict, Optional
 import arcade
 
 # Custom
-from resources.sounds import sounds
+from database import Database
+from sounds import sounds
 from views.start_menu import StartMenu
 
 if TYPE_CHECKING:
@@ -27,6 +28,14 @@ class Window(arcade.Window):
     ----------
     views: Dict[str, arcade.View]
         Holds all the views used by the game.
+    sounds: Dict[str, arcade.Sound]
+        The dictionary which holds all the music for the game.
+    current_sound: Optional[arcade.Sound]
+        The currently playing sound.
+    player: Optional[Player]
+        The pyglet media player which actually plays the music.
+    database: Database
+        The connection to the sqlite database.
     """
 
     def __init__(self, title: str) -> None:
@@ -35,9 +44,27 @@ class Window(arcade.Window):
         self.sounds: Dict[str, arcade.Sound] = sounds
         self.current_sound: Optional[arcade.Sound] = None
         self.player: Optional[Player] = None
+        self.database: Database = Database(self)
 
     def __repr__(self) -> str:
         return f"<Window (Width={self.width}) (Height={self.height})>"
+
+    @staticmethod
+    def seconds_to_string(seconds: float) -> str:
+        """
+        Converts seconds into a minutes and seconds formatted in a string.
+
+        Parameters
+        ----------
+        seconds: float
+            The seconds to convert to a string.
+
+        Returns
+        -------
+        str
+            The formatted string.
+        """
+        return f"Time: {int(seconds / 60)} minutes and {int(seconds % 60)} seconds"
 
 
 def main() -> None:
