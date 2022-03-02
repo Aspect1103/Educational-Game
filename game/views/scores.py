@@ -58,6 +58,28 @@ class BackButton(arcade.gui.UIFlatButton):
         start_menu.manager.enable()
 
 
+class ResetButton(arcade.gui.UIFlatButton):
+    """A button which will reset all the saved scores on the database."""
+
+    def __repr__(self) -> str:
+        return (
+            f"<ResetButton (Position=({self.center_x}, {self.center_y}))"
+            f" (Width={self.width}) (Height={self.height})>"
+        )
+
+    def on_click(self, _) -> None:
+        """Called when the button is clicked."""
+        # Get the current window and view
+        window: Window = arcade.get_window()
+        current_view: Scores = window.current_view  # noqa
+
+        # Delete all the rows
+        window.database.delete_all()
+
+        # Reset score_text back to level 1
+        current_view.score_text.text = window.database.get_five_scores(1)
+
+
 class Scores(arcade.View):
     """
     Displays the top scores for each level.
@@ -77,13 +99,13 @@ class Scores(arcade.View):
         vertical_box = arcade.gui.UIBoxLayout()
 
         # Create the level buttons
-        horizontal_box = arcade.gui.UIBoxLayout(vertical=False)
+        horizontal_level_box = arcade.gui.UIBoxLayout(vertical=False)
         for count in range(10):
             new_score = LevelScoreButton(
                 text=str(count + 1), width=50, style=BUTTON_STYLE
             )
-            horizontal_box.add(new_score.with_space_around(right=10))
-        vertical_box.add(horizontal_box.with_space_around(bottom=20))
+            horizontal_level_box.add(new_score.with_space_around(right=10))
+        vertical_box.add(horizontal_level_box.with_space_around(bottom=20))
 
         # Create the score text
         self.score_text: arcade.gui.UITextArea = arcade.gui.UITextArea(
@@ -95,9 +117,13 @@ class Scores(arcade.View):
         )
         vertical_box.add(self.score_text.with_space_around(bottom=20))
 
-        # Create the back button
+        # Create the button layout
+        horizontal_button_box = arcade.gui.UIBoxLayout(vertical=False)
         back_button = BackButton(text="Back", width=205, style=BUTTON_STYLE)
-        vertical_box.add(back_button.with_space_around(top=20))
+        horizontal_button_box.add(back_button.with_space_around(right=20))
+        reset_button = ResetButton(text="Reset", width=205, style=BUTTON_STYLE)
+        horizontal_button_box.add(reset_button)
+        vertical_box.add(horizontal_button_box)
 
         # Register the UI elements
         self.manager.add(

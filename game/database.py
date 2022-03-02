@@ -54,7 +54,7 @@ class Database:
         self.connection.execute(
             """
             INSERT INTO Scores(Score, Time_to_complete, Win, Level_ID)
-            VALUES(?, ?, ?, ?)""",
+            VALUES(?, ?, ?, ?);""",
             (score, time, win, level),
         )
         self.connection.commit()
@@ -82,7 +82,7 @@ class Database:
                 FROM Scores
                 WHERE Level_ID = ?
                 ORDER BY Score DESC, Time_to_complete ASC
-                LIMIT 5""",
+                LIMIT 5;""",
                 (level,),
             )
         ):
@@ -95,3 +95,8 @@ class Database:
             final.insert(0, f"Top 5 Scores (Level {level}):\n\n")
             return "\n".join(final)
         return "No scores saved. Play the level to generate some."
+
+    def delete_all(self) -> None:
+        """Deletes all rows in the scores table."""
+        self.connection.execute("DELETE FROM Scores;")
+        self.connection.commit()
