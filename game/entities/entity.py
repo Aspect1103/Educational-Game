@@ -8,7 +8,6 @@ import arcade
 
 # Custom
 from constants import (
-    BULLET_DAMAGE,
     BULLET_VELOCITY,
     DEAD_ZONE,
     DISTANCE_TO_CHANGE_TEXTURE,
@@ -77,6 +76,8 @@ class Entity(arcade.Sprite):
         The textures which represent this entity.
     health: int
         The health of the entity.
+    bullet_damage: int
+        The amount of damage this entity deals.
 
     Attributes
     ----------
@@ -98,12 +99,14 @@ class Entity(arcade.Sprite):
         y: float,
         texture_dict: Dict[str, List[List[arcade.Texture]]],
         health: int,
+        bullet_damage: int,
     ) -> None:
         super().__init__(scale=SPRITE_SCALE)
         self.center_x: float = x
         self.center_y: float = y
         self.texture_dict: Dict[str, List[List[arcade.Texture]]] = texture_dict
         self.health: int = health
+        self.bullet_damage: int = bullet_damage
         self.texture: arcade.Texture = self.texture_dict["idle"][0][0]
         self.time_since_last_attack: float = 0
         self.facing: int = FACING_RIGHT
@@ -138,9 +141,9 @@ class Entity(arcade.Sprite):
         physics.set_velocity(new_bullet, (BULLET_VELOCITY * direction, 0))
         bullet_list.append(new_bullet)
 
-    def deal_damage(self) -> None:
+    def deal_damage(self, damage: int) -> None:
         """Deals damage to the entity."""
-        self.health -= BULLET_DAMAGE
+        self.health -= damage
 
     def pymunk_moved(
         self, physics_engine: PhysicsEngine, dx: float, dy: float, d_angle: float

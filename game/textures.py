@@ -48,6 +48,21 @@ moving_filenames = {
             "enemy_walk8.png",
         ],
     },
+    "boss": {
+        "idle": ["boss_idle.png"],
+        "jump": ["boss_jump.png"],
+        "fall": ["boss_fall.png"],
+        "walk": [
+            "boss_walk1.png",
+            "boss_walk2.png",
+            "boss_walk3.png",
+            "boss_walk4.png",
+            "boss_walk5.png",
+            "boss_walk6.png",
+            "boss_walk7.png",
+            "boss_walk8.png",
+        ],
+    },
 }
 # Create the non-moving textures
 non_moving_textures: Dict[str, arcade.Texture] = {

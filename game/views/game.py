@@ -9,17 +9,22 @@ import arcade
 
 # Custom
 from constants import (
+    BOSS_ATTACK_COOLDOWN_MAX,
+    BOSS_ATTACK_COOLDOWN_MIN,
+    BOSS_BULLET_DAMAGE,
     DAMPING,
     ENEMY_ATTACK_COOLDOWN_MAX,
     ENEMY_ATTACK_COOLDOWN_MIN,
+    ENEMY_BULLET_DAMAGE,
     GRAVITY,
     PLAYER_ATTACK_COOLDOWN,
+    PLAYER_BULLET_DAMAGE,
     PLAYER_JUMP_FORCE,
     PLAYER_MOVE_FORCE,
     SPRITE_SIZE,
 )
 from entities.enemy import Enemy
-from entities.player import Player
+from entities.player import Player, ScoreAmount
 from levels import levels
 from physics import PhysicsEngine
 from textures import moving_textures
@@ -48,6 +53,8 @@ class Game(arcade.View):
         The sprite list for the coin sprites.
     door_list: Optional[arcade.SpriteList]
         The sprite list for the door sprites.
+    boss: Optional[Enemy]
+        The sprite for the boss. This is only used in level 10.
     blocker_list: List[arcade.SpriteList]
         A list containing sprite lists for each of the walls blocking progression.
     enemy_list: arcade.SpriteList
@@ -86,6 +93,7 @@ class Game(arcade.View):
         self.wall_list: Optional[arcade.SpriteList] = None
         self.coin_list: Optional[arcade.SpriteList] = None
         self.door_list: Optional[arcade.SpriteList] = None
+        self.boss: Optional[Enemy] = None
         self.blocker_list: List[arcade.SpriteList] = []
         self.enemy_list: arcade.SpriteList = arcade.SpriteList(use_spatial_hash=True)
         self.bullet_list: arcade.SpriteList = arcade.SpriteList(use_spatial_hash=True)
@@ -141,6 +149,15 @@ class Game(arcade.View):
         self.wall_list = tile_map.sprite_lists["Platforms"]
         self.coin_list = tile_map.sprite_lists["Coins"]
         self.door_list = tile_map.sprite_lists["Door"]
+        if self.level_id == 10:
+            boss = tile_map.sprite_lists["Boss"].sprite_list[0]
+            self.boss = Enemy(
+                boss.center_x,
+                boss.center_y,
+                moving_textures["boss"],
+                50,
+                BOSS_BULLET_DAMAGE,
+            )
 
         # Create the player object
         player_obj = tile_map.sprite_lists["Player"][0]
@@ -149,6 +166,7 @@ class Game(arcade.View):
             player_obj.center_y,
             moving_textures["player"],
             100,
+            PLAYER_BULLET_DAMAGE,
         )
 
         # Create the enemies
@@ -159,6 +177,7 @@ class Game(arcade.View):
                     enemy.center_y,
                     moving_textures["enemy"],
                     10,
+                    ENEMY_BULLET_DAMAGE,
                 )
             )
 
@@ -177,6 +196,7 @@ class Game(arcade.View):
             self.coin_list,
             self.blocker_list,
             self.door_list,
+            self.boss,
         )
 
         # Set up the Camera
@@ -193,6 +213,13 @@ class Game(arcade.View):
             assert isinstance(enemy, Enemy)
             enemy.set_cooldown(
                 random.uniform(ENEMY_ATTACK_COOLDOWN_MIN, ENEMY_ATTACK_COOLDOWN_MAX)
+            )
+
+        # Set up the boss' cooldown if we are on level 10
+        if self.level_id == 10:
+            assert self.boss is not None
+            self.boss.set_cooldown(
+                random.uniform(BOSS_ATTACK_COOLDOWN_MIN, BOSS_ATTACK_COOLDOWN_MAX)
             )
 
     def on_show(self) -> None:
@@ -224,6 +251,9 @@ class Game(arcade.View):
         self.bullet_list.draw()
         self.door_list.draw()
         self.player.draw()
+        if self.level_id == 10:
+            assert self.boss is not None
+            self.boss.draw()
         for blocker in self.blocker_list:
             blocker.draw()
 
@@ -261,11 +291,22 @@ class Game(arcade.View):
             assert isinstance(enemy, Enemy)
             if enemy.health <= 0:
                 enemy.remove_from_sprite_lists()
+                self.player.update_score(ScoreAmount.ENEMY)
 
         # Check if the player is dead
         if self.player.health <= 0:
             # End the level
             self.window.show_view(self.window.views["EndScreen"])
+
+        # Check if we can end the game on level 10
+        if self.level_id == 10:
+            assert self.boss is not None
+            if self.boss.health <= 0:
+                # Set level_won since the player won
+                self.level_won = True
+
+                # Show the end screen
+                self.window.show_view(self.window.views["EndScreen"])
 
         # Update the player's time since last attack
         self.player.time_since_last_attack += delta_time
@@ -305,6 +346,16 @@ class Game(arcade.View):
             if enemy.attack_counter >= enemy.attack_cooldown:
                 enemy.attack_counter = 0
                 enemy.ranged_attack(self.bullet_list)
+
+        # Do the same for the boss if we are on level 10
+        if self.level_id == 10:
+            assert self.boss is not None
+            force = self.boss.calculate_movement(self.player, line_of_sight_list)
+            self.physics_engine.apply_force(self.boss, force)
+            self.boss.attack_counter += delta_time
+            if self.boss.attack_counter >= self.boss.attack_cooldown:
+                self.boss.attack_counter = 0
+                self.boss.ranged_attack(self.bullet_list)
 
         # Update the physics engine
         self.physics_engine.step()

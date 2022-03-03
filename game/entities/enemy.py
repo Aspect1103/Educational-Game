@@ -27,7 +27,9 @@ class Enemy(Entity):
     texture_dict: Dict[str, List[List[arcade.Texture]]]
         The textures which represent this enemy.
     health: int
-        The health of the enemy
+        The health of the enemy.
+    bullet_damage: int
+        The amount of damage this enemy deals.
 
     Attributes
     ----------
@@ -43,8 +45,9 @@ class Enemy(Entity):
         y: float,
         texture_dict: Dict[str, List[List[arcade.Texture]]],
         health: int,
+        bullet_damage: int,
     ) -> None:
-        super().__init__(x, y, texture_dict, health)
+        super().__init__(x, y, texture_dict, health, bullet_damage)
         self.attack_cooldown: float = 0
         self.attack_counter: float = 0
 

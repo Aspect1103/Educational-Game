@@ -110,8 +110,8 @@ class Scores(arcade.View):
         # Create the score text
         self.score_text: arcade.gui.UITextArea = arcade.gui.UITextArea(
             text=self.window.database.get_five_scores(1),
-            width=750,
-            height=285,
+            width=775,
+            height=450,
             text_color=arcade.color.BLACK,
             font_size=24,
         )

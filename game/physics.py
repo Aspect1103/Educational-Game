@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 # Custom
-from typing import TYPE_CHECKING, List, Tuple
+from typing import TYPE_CHECKING, List, Optional, Tuple
 
 # Pip
 import arcade
@@ -97,10 +97,10 @@ def player_bullet_begin_handler(player: Player, bullet: Bullet, *_) -> bool:
     bullet: Bullet
         The bullet sprite which hit the player.
     """
-    # Deal damage to the player
-    player.deal_damage()
-    # Remove the bullet
     try:
+        # Deal damage to the player
+        player.deal_damage(bullet.owner.bullet_damage)
+        # Remove the bullet
         bullet.remove_from_sprite_lists()
     except AttributeError:
         # An error randomly occurs when the player is moving fast enough
@@ -127,7 +127,7 @@ def enemy_bullet_begin_handler(enemy: Enemy, bullet: Bullet, *_) -> bool:
     try:
         if not isinstance(bullet.owner, Enemy):
             # Deal damage to the enemy
-            enemy.deal_damage()
+            enemy.deal_damage(bullet.owner.bullet_damage)
             # Remove the bullet
             bullet.remove_from_sprite_lists()
     except AttributeError:
@@ -234,6 +234,7 @@ class PhysicsEngine(arcade.PymunkPhysicsEngine):
         coin_list: arcade.SpriteList,
         blocker_list: List[arcade.SpriteList],
         door_list: arcade.SpriteList,
+        boss: Optional[arcade.Sprite],
     ) -> None:
         """
         Setups up the various sprites needed for the physics engine to work properly.
@@ -252,6 +253,8 @@ class PhysicsEngine(arcade.PymunkPhysicsEngine):
             A list containing sprite lists for each blocker wall.
         door_list: arcade.SpriteList
             The sprite list for the door sprites.
+        boss: Optional[arcade.Sprite]
+            The boss sprite.
         """
         # Add the player sprite to the physics engine
         self.add_sprite(
@@ -297,6 +300,16 @@ class PhysicsEngine(arcade.PymunkPhysicsEngine):
             collision_type="door",
         )
 
+        # Add the boss sprite to the physics engine
+        if boss:
+            self.add_sprite(
+                boss,
+                mass=MASS,
+                friction=FRICTION,
+                moment_of_inertia=self.MOMENT_INF,
+                collision_type="boss",
+            )
+
         # Add collision handlers
         self.add_collision_handler(
             "player", "coin", begin_handler=player_coin_pickup_handler
@@ -325,6 +338,10 @@ class PhysicsEngine(arcade.PymunkPhysicsEngine):
         self.add_collision_handler(
             "player", "door", separate_handler=player_door_separate_handler
         )
+        if boss:
+            self.add_collision_handler(
+                "boss", "bullet", begin_handler=enemy_bullet_begin_handler
+            )
 
     def __repr__(self) -> str:
         return (

@@ -78,7 +78,7 @@ class Database:
         for count, result in enumerate(
             cursor.execute(
                 """
-                SELECT Score, Time_to_complete
+                SELECT Score, Time_to_complete, Win
                 FROM Scores
                 WHERE Level_ID = ?
                 ORDER BY Score DESC, Time_to_complete ASC
@@ -89,10 +89,11 @@ class Database:
             result = list(result)
             final.append(
                 f"{count + 1}. Score: {result[0]}."
-                f" {self.window.seconds_to_string(result[1])}."
+                f" {self.window.seconds_to_string(result[1])}. Win:"
+                f" {'Yes' if result[2] else 'No'}"
             )
         if final:
-            final.insert(0, f"Top 5 Scores (Level {level}):\n\n")
+            final.insert(0, f"Top 5 Scores (Level {level}):\n")
             return "\n".join(final)
         return "No scores saved. Play the level to generate some."
 

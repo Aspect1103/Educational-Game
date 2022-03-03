@@ -58,6 +58,9 @@ layer_options: Dict[str, Dict[str, Union[str, bool]]] = {
     "Door": {
         "use_spatial_hash": True,
     },
+    "Boss": {
+        "use_spatial_hash": True,
+    },
 }
 
 # Create the levels

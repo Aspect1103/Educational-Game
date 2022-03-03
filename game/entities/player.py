@@ -31,9 +31,11 @@ class Player(Entity):
     y: float
         The y position of the player.
     texture_dict: Dict[str, List[List[arcade.Texture]]]
-        The textures which represent this player
+        The textures which represent this player.
     health: int
-        The health of the player
+        The health of the player.
+    bullet_damage: int
+        The amount of damage this entity deals.
 
     Attributes
     ----------
@@ -47,8 +49,9 @@ class Player(Entity):
         y: float,
         texture_dict: Dict[str, List[List[arcade.Texture]]],
         health: int,
+        bullet_damage: int,
     ) -> None:
-        super().__init__(x, y, texture_dict, health)
+        super().__init__(x, y, texture_dict, health, bullet_damage)
         self.score: int = 0
 
     def __repr__(self) -> str:
