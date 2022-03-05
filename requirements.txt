@@ -1,2 +1,4 @@
 arcade>=2.6.8
 pyglet>=2.0.dev13
+pyinstaller>=4.9
+shapely>=1.8.1.post1
