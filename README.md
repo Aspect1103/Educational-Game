@@ -12,4 +12,4 @@ If PyInstaller returns this error:
 Error: geos_c.dll not found, required by hook-shapely.py.
 Please check your installation or provide a pull request to PyInstaller to update hook-shapely.py.
 ```
-Then download the correct Shapely build from [Here](https://www.lfd.uci.edu/~gohlke/pythonlibs/#shapely). This project uses the 64 bit Python 3.9 Shapely 1.8.1.post1 build [Here](https://download.lfd.uci.edu/pythonlibs/x6hvwk7i/Shapely-1.8.1.post1-cp39-cp39-win_amd64.whl).
+Then download the correct Shapely build from [here](https://www.lfd.uci.edu/~gohlke/pythonlibs/#shapely). This project uses the 64 bit Python 3.9 Shapely 1.8.1.post1 build [here](https://download.lfd.uci.edu/pythonlibs/x6hvwk7i/Shapely-1.8.1.post1-cp39-cp39-win_amd64.whl).
