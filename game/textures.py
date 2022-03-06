@@ -16,6 +16,7 @@ texture_path = (
 non_moving_filenames = {
     "background": "background.png",
 }
+
 # Create a dictionary to hold all the filenames for the non-moving textures
 moving_filenames = {
     "player": {
