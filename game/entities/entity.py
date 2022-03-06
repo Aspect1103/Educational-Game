@@ -86,7 +86,7 @@ class Entity(arcade.Sprite):
     time_since_last_attack: float
         How long it has been since the last attack.
     facing: int
-        The direction the entity is facing. 1 is right and -1 is left.
+        The direction the entity is facing. 0 is right and 1 is left.
     walk_texture_index: int
         The current walk texture index which is displayed.
     x_odometer: float
