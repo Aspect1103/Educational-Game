@@ -8,7 +8,7 @@
     ],
     "correct": "ab/c",
     "explanation": "When multiplying two variables, the expression could be rearranged as ab and when dividing two variables, the expression could be rearranged as a/b.",
-    "question": "Rearrange the expression 'a*b\u00f7c' so that no operators are used."
+    "question": "Rearrange the expression 'a*b\u00f7c' so that a fraction is used instead with no operators."
   },
   {
     "answers": [
